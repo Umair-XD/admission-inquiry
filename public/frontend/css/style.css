@@ -1,0 +1,830 @@
+/*home page css*/
+.sticky-all-headers {
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+}
+/* Gradients */
+.header-bg {
+    background: linear-gradient(to right, #4f6d83, #ccd5dc, #013a63);
+    position: sticky;
+}
+.sub-header-bg {
+    background: linear-gradient(to right, #012a4a, #013a63);
+    position: sticky;
+}
+.sub-header {
+    transition: color 0.3s ease;
+}
+
+.sub-header:hover {
+    color: #e8cc14 !important;  /* Dark Blue Shade */
+}
+.light-yellow {
+    background-color: #e8cc14;
+    height: 22px;
+    line-height: 22px;
+    padding: 0 !important;
+    position: sticky;
+}
+.office-link {
+    font-size: 0.72rem;
+    font-weight: 600;
+}
+.office-link {
+    transition: color 0.3s ease;
+}
+
+.office-link:hover {
+    color: #002b80 !important;  /* Dark Blue Shade */
+}
+
+footer {
+    background: linear-gradient(to right, #4f6d83, #ccd5dc, #012a4a);
+}
+
+
+
+
+/*about page css*/
+.sticky-all-headers {
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+}
+
+/* Backgrounds */
+.header-bg {
+    background: linear-gradient(to right, #a6c2db, #ccd5dc, #013a63);
+}
+
+.sub-header {
+    background: linear-gradient(to right, #012a4a, #013a63);
+}
+
+.sub-header a:hover {
+    color: #e8cc14 !important;
+}
+
+.office-header {
+    background-color: #e8cc14;
+}
+
+/* Text Styling */
+.office-header a {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #fff !important;
+    text-decoration: none;
+}
+.office-header a:hover {
+    color: #013a63 !important;
+}
+
+.header h1 {
+    font-size: 1rem;
+    margin: 0;
+    padding: 0.25rem 0;
+    color: #001B33;
+}
+.sub-header a {
+    font-size: 0.85rem;
+}
+footer {
+    background: linear-gradient(to right, #4f6d83, #ccd5dc, #012a4a);
+}
+
+/* Body padding to account for sticky headers */
+body {
+    margin: 0;
+    padding-top: 0px; /* approximate total height of all sticky headers */
+}
+
+
+
+
+
+
+
+/*academics page css*/
+ body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+        }
+
+        .sticky-all-headers {
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+}
+
+/* Backgrounds */
+.header-bg {
+    background: linear-gradient(to right, #a6c2db, #ccd5dc, #013a63);
+}
+
+.sub-header {
+    background: linear-gradient(to right, #012a4a, #013a63);
+}
+
+.sub-header a:hover {
+    color: #e8cc14 !important;
+}
+
+.office-header {
+    background-color: #e8cc14;
+}
+
+/* Text Styling */
+.office-header a {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #fff !important;
+    text-decoration: none;
+}
+.office-header a:hover {
+    color: #013a63 !important;
+}
+
+.header h1 {
+    font-size: 1rem;
+    margin: 0;
+    padding: 0.25rem 0;
+    color: #001B33;
+}
+.sub-header a {
+    font-size: 0.85rem;
+}
+
+
+        footer {
+    background: linear-gradient(to right, #4f6d83, #ccd5dc, #012a4a);
+}
+
+        /* IMAGE CARD STYLE */
+        .dept-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 6px;
+            margin-bottom: 25px;
+        }
+        .dept-card img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            transition: 0.4s;
+        }
+        .dept-card:hover img {
+            transform: scale(1.05);
+        }
+        .dept-text {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            color: white;
+            font-weight: bold;
+            font-size: 1.3rem;
+            text-shadow: 2px 2px 4px black;
+        }
+    
+
+
+
+
+
+/*admission page css*/
+.sticky-all-headers {
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+}
+
+.header-bg {
+    background: linear-gradient(to right, #a6c2db, #ccd5dc, #013a63);
+}
+
+.sub-header {
+    background: linear-gradient(to right, #012a4a, #013a63);
+}
+
+.sub-header a:hover {
+    color: #e8cc14 !important;
+}
+
+.office-header {
+    background-color: #e8cc14;
+}
+
+/* Text Styling */
+.office-header a {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #fff !important;
+    text-decoration: none;
+}
+.office-header a:hover {
+    color: #013a63 !important;
+}
+
+.header h1 {
+    font-size: 1rem;
+    margin: 0;
+    padding: 0.25rem 0;
+    color: #001B33;
+}
+.sub-header a {
+    font-size: 0.85rem;
+}
+footer {
+    background: linear-gradient(to right, #4f6d83, #ccd5dc, #012a4a);
+}
+    body {
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    /* Animation Only (Bootstrap mein available nahi hoti) */
+    .animate-img {
+        opacity: 0;
+        transform: translateX(-120px) scale(0.8);
+        animation: slideIn 1.2s ease-out forwards;
+        transition: 0.6s;
+    }
+
+    @keyframes slideIn {
+        0% { opacity: 0; transform: translateX(-120px) scale(0.8); }
+        100% { opacity: 1; transform: translateX(0) scale(1); }
+    }
+
+
+/*alumni page css*/
+  .header-bg {
+    background: linear-gradient(to right, #4f6d83, #ccd5dc, #013a63);
+  }
+
+  .sub-header-bg {
+    background: linear-gradient(to right, #012a4a, #013a63);
+  }
+
+  .sub-header {
+    transition: color 0.3s ease;
+  }
+  .sub-header:hover {
+    color: #e8cc14 !important;
+  }
+
+  .light-yellow {
+    background-color: #e8cc14;
+    height: 22px;
+    line-height: 22px;
+    padding: 0 !important;
+  }
+
+  .office-link {
+    font-size: 0.72rem;
+    font-weight: 600;
+    transition: color 0.3s ease;
+  }
+  .office-link:hover {
+    color: #002b80 !important;
+  }
+
+  footer {
+    background: linear-gradient(to right, #4f6d83, #ccd5dc, #012a4a);
+  }
+
+
+
+
+
+/*campuslife page css*/
+.sticky-all-headers {
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+}
+
+/* Backgrounds */
+.header-bg {
+    background: linear-gradient(to right, #a6c2db, #ccd5dc, #013a63);
+}
+
+.sub-header {
+    background: linear-gradient(to right, #012a4a, #013a63);
+}
+
+.sub-header a:hover {
+    color: #e8cc14 !important;
+}
+
+.office-header {
+    background-color: #e8cc14;
+}
+
+/* Text Styling */
+.office-header a {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #fff !important;
+    text-decoration: none;
+}
+.office-header a:hover {
+    color: #013a63 !important;
+}
+
+.header h1 {
+    font-size: 1rem;
+    margin: 0;
+    padding: 0.25rem 0;
+    color: #001B33;
+}
+.sub-header a {
+    font-size: 0.85rem;
+}
+
+  /* Hero section */
+  .hero-campus {
+    background: linear-gradient(rgba(1,42,74,0.7), rgba(1,42,74,0.7)),
+                url("assets/campus-life-bg.jpg");
+    background-size: cover;
+    background-position: center;
+  }
+  footer {
+    background: linear-gradient(to right, #4f6d83, #ccd5dc, #012a4a);
+}
+
+
+
+
+
+
+/*download page css*/
+.sticky-all-headers {
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+}
+  /* Gradients */
+.header-bg {
+    background: linear-gradient(to right, #4f6d83, #ccd5dc, #013a63);
+    position: sticky;
+}
+.sub-header-bg {
+    background: linear-gradient(to right, #012a4a, #013a63);
+    position: sticky;
+}
+.sub-header {
+    transition: color 0.3s ease;
+}
+
+.sub-header:hover {
+    color: #e8cc14 !important;  /* Dark Blue Shade */
+}
+.light-yellow {
+    background-color: #e8cc14;
+    height: 22px;
+    line-height: 22px;
+    padding: 0 !important;
+    position: sticky;
+}
+.office-link {
+    font-size: 0.72rem;
+    font-weight: 600;
+}
+.office-link {
+    transition: color 0.3s ease;
+}
+
+.office-link:hover {
+    color: #002b80 !important;  /* Dark Blue Shade */
+}
+
+/* Minimal Custom CSS */
+
+footer {
+    background: linear-gradient(to right, #4f6d83, #ccd5dc, #012a4a);
+}
+
+
+
+
+
+
+
+/*institute page css*/
+ body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+        }
+.sticky-all-headers {
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+}
+
+/* Backgrounds */
+.header-bg {
+    background: linear-gradient(to right, #a6c2db, #ccd5dc, #013a63);
+}
+
+.sub-header {
+    background: linear-gradient(to right, #012a4a, #013a63);
+}
+
+.sub-header a:hover {
+    color: #e8cc14 !important;
+}
+
+.office-header {
+    background-color: #e8cc14;
+}
+
+/* Text Styling */
+.office-header a {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #fff !important;
+    text-decoration: none;
+}
+.office-header a:hover {
+    color: #013a63 !important;
+}
+
+.header h1 {
+    font-size: 1rem;
+    margin: 0;
+    padding: 0.25rem 0;
+    color: #001B33;
+}
+.sub-header a {
+    font-size: 0.85rem;
+}
+
+
+        footer {
+    background: linear-gradient(to right, #4f6d83, #ccd5dc, #012a4a);
+}
+
+        /* IMAGE CARD STYLE */
+        .dept-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 6px;
+            margin-bottom: 25px;
+        }
+        .dept-card img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            transition: 0.4s;
+        }
+        .dept-card:hover img {
+            transform: scale(1.05);
+        }
+        .dept-text {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            color: white;
+            font-weight: bold;
+            font-size: 1.3rem;
+            text-shadow: 2px 2px 4px black;
+        }
+    
+
+
+
+
+
+
+
+
+/*job page css*/
+.sticky-all-headers {
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+}
+  /* Gradients */
+.header-bg {
+    background: linear-gradient(to right, #4f6d83, #ccd5dc, #013a63);
+    position: sticky;
+}
+.sub-header-bg {
+    background: linear-gradient(to right, #012a4a, #013a63);
+    position: sticky;
+}
+.sub-header {
+    transition: color 0.3s ease;
+}
+
+.sub-header:hover {
+    color: #e8cc14 !important;  /* Dark Blue Shade */
+}
+.light-yellow {
+    background-color: #e8cc14;
+    height: 22px;
+    line-height: 22px;
+    padding: 0 !important;
+    position: sticky;
+}
+.office-link {
+    font-size: 0.72rem;
+    font-weight: 600;
+}
+.office-link {
+    transition: color 0.3s ease;
+}
+
+.office-link:hover {
+    color: #002b80 !important;  /* Dark Blue Shade */
+}
+
+footer {
+    background: linear-gradient(to right, #4f6d83, #ccd5dc, #012a4a);
+}
+
+
+
+
+
+
+/*login page css*/
+    /* Background Image */
+    .login-bg {
+      position: relative;
+      min-height: 100vh;
+      background: url("assets/NFC-Institute-Faisalabad-Admission.jpg") no-repeat center / cover;
+      overflow: hidden;
+    }
+
+    /* Dark Overlay */
+    .login-bg::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 0;
+    }
+
+    /* Glass Card + Animation */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      animation: fadeUp 0.8s ease-out both;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(25px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .glass-card .form-control::placeholder {
+      color: rgba(255, 255, 255, 0.7);
+    }
+  
+
+
+
+
+
+
+
+
+
+/*officsofrector page css*/
+ .sticky-all-headers {
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+}
+  /* Gradients */
+.header-bg {
+    background: linear-gradient(to right, #4f6d83, #ccd5dc, #013a63);
+    position: sticky;
+}
+.sub-header-bg {
+    background: linear-gradient(to right, #012a4a, #013a63);
+    position: sticky;
+}
+.sub-header {
+    transition: color 0.3s ease;
+}
+
+.sub-header:hover {
+    color: #e8cc14 !important;  /* Dark Blue Shade */
+}
+.light-yellow {
+    background-color: #e8cc14;
+    height: 22px;
+    line-height: 22px;
+    padding: 0 !important;
+    position: sticky;
+}
+.office-link {
+    font-size: 0.72rem;
+    font-weight: 600;
+}
+.office-link {
+    transition: color 0.3s ease;
+}
+
+.office-link:hover {
+    color: #002b80 !important;  /* Dark Blue Shade */
+}
+footer {
+    background: linear-gradient(to right, #4f6d83, #ccd5dc, #012a4a);
+}
+
+/* ===== MINIMAL CUSTOM CSS ===== */
+.hero-rector {
+    background:
+      linear-gradient(to right, rgba(0,0,0,0.55), rgba(0,0,0,0.15)),
+      url('assets/najaf sb.jpeg');
+    background-repeat: no-repeat;
+    background-position: right 20%;
+    background-size: cover;
+    min-height: 520px;
+    color: #fff;
+}
+
+
+
+
+/*reserachinnovation page css*/
+.sticky-all-headers {
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+}
+
+/* Backgrounds */
+.header-bg {
+    background: linear-gradient(to right, #a6c2db, #ccd5dc, #013a63);
+}
+
+.sub-header {
+    background: linear-gradient(to right, #012a4a, #013a63);
+}
+
+.sub-header a:hover {
+    color: #e8cc14 !important;
+}
+
+.office-header {
+    background-color: #e8cc14;
+}
+
+/* Text Styling */
+.office-header a {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #fff !important;
+    text-decoration: none;
+}
+.office-header a:hover {
+    color: #013a63 !important;
+}
+
+.header h1 {
+    font-size: 1rem;
+    margin: 0;
+    padding: 0.25rem 0;
+    color: #001B33;
+}
+.sub-header a {
+    font-size: 0.85rem;
+}
+footer {
+    background: linear-gradient(to right, #4f6d83, #ccd5dc, #012a4a);
+}
+  /* Hero background (minimum CSS) */
+  .hero-research {
+    background: linear-gradient(rgba(1,42,74,0.85), rgba(1,42,74,0.85)),
+                url("assets/NFC-Institute-Faisalabad-Admission.jpg");
+    background-size: cover;
+    background-position: center;
+  }
+
+
+
+
+
+
+
+/*signin page css*/
+    /* Background Image */
+    .login-bg {
+      position: relative;
+      min-height: 100vh;
+      background: url("assets/NFC-Institute-Faisalabad-Admission.jpg") no-repeat center / cover;
+      overflow: hidden;
+    }
+
+    /* Simple Dark Overlay (NO blue) */
+    .login-bg::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7); /* clean dark overlay */
+      z-index: 0;
+    }
+
+    /* Glass Card + Animation */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      animation: fadeUp 0.8s ease-out both;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(25px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .glass-card .form-control::placeholder {
+      color: rgba(255, 255, 255, 0.7);
+    }
+ 
+
+
+
+
+
+
+
+
+
+/*student page css*/
+.sticky-all-headers {
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+}
+  
+/* Gradients */
+.header-bg {
+    background: linear-gradient(to right, #4f6d83, #ccd5dc, #013a63);
+    position: sticky;
+}
+.sub-header-bg {
+    background: linear-gradient(to right, #012a4a, #013a63);
+    position: sticky;
+}
+.sub-header {
+    transition: color 0.3s ease;
+}
+
+.sub-header:hover {
+    color: #e8cc14 !important;  /* Dark Blue Shade */
+}
+.light-yellow {
+    background-color: #e8cc14;
+    height: 22px;
+    line-height: 22px;
+    padding: 0 !important;
+    position: sticky;
+}
+.office-link {
+    font-size: 0.72rem;
+    font-weight: 600;
+}
+.office-link {
+    transition: color 0.3s ease;
+}
+
+.office-link:hover {
+    color: #002b80 !important;  /* Dark Blue Shade */
+}
+footer {
+    background: linear-gradient(to right, #4f6d83, #ccd5dc, #012a4a);
+}
+
+
+
+
+
+
+
+
+/*home2 page css*/
+
+/* Only for removing scrollbar in slider */
+.event-slider::-webkit-scrollbar {
+    display: none;
+}
