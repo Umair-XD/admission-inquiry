@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Dashboard\Access;
 
 use App\Enums\RoleEnum;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Dashboard\UserListRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -12,12 +13,20 @@ use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(UserListRequest $request)
     {
-        $users = User::with('roles')->latest()->get();
+        if ($request->ajax()) {
+            return $request->processRequest();
+        }
+
         $roles = Role::orderBy('name')->get();
 
-        return view('dashboard.access.users.index', compact('users', 'roles'));
+        return view('dashboard.access.users.index', compact('roles'));
+    }
+
+    public function edit(User $user)
+    {
+        return view('dashboard.access.users.edit_modal', compact('user'));
     }
 
     public function store(Request $request)
@@ -73,7 +82,6 @@ class UserController extends Controller
         if ($user->id === auth()->id()) {
             return back()->with('error', 'You cannot delete your own account.');
         }
-
         $user->delete();
 
         return back()->with('success', 'User deleted successfully.');

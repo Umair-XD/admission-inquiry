@@ -13,5 +13,8 @@ class DatabaseSeeder extends Seeder
 
         $this->command->info('Seeding super admin user...');
         $this->call(SuperAdminSeeder::class);
+
+        $this->command->info('Seeding degrees...');
+        $this->call(DegreeSeeder::class);
     }
 }

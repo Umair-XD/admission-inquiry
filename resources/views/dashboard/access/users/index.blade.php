@@ -15,121 +15,26 @@
 </div>
 
 <div class="card">
-    <div class="card-body p-0">
-        @if($users->isEmpty())
-            <p class="text-center text-muted py-5 mb-0">No users found.</p>
-        @else
+    <div class="card-body p-3">
         <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
+            <table class="table table-hover align-middle w-100" id="usersTable">
                 <thead class="table-light">
                     <tr>
-                        <th class="ps-4">#</th>
-                        <th>Name</th>
+                        <th>#</th>
+                        <th>User</th>
                         <th>Email</th>
                         <th>Role</th>
                         <th>Created</th>
-                        <th class="text-end pe-4">Actions</th>
+                        <th class="no-sort">Actions</th>
                     </tr>
                 </thead>
-                <tbody>
-                    @foreach($users as $i => $user)
-                    <tr>
-                        <td class="ps-4 text-muted small">{{ $i + 1 }}</td>
-                        <td>
-                            <div class="d-flex align-items-center gap-2">
-                                <div class="rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center fw-bold flex-shrink-0"
-                                     style="width:36px;height:36px;font-size:.8rem;">
-                                    {{ strtoupper(substr($user->name, 0, 1)) }}
-                                </div>
-                                <span class="fw-medium">{{ $user->name }}</span>
-                                @if($user->id === auth()->id())
-                                    <span class="badge bg-secondary-subtle text-secondary rounded-pill small">You</span>
-                                @endif
-                            </div>
-                        </td>
-                        <td class="text-muted small">{{ $user->email }}</td>
-                        <td>
-                            @foreach($user->roles as $role)
-                                <span class="badge rounded-pill
-                                    {{ $role->name === 'super_admin' ? 'bg-danger-subtle text-danger' :
-                                       ($role->name === 'admin' ? 'bg-primary-subtle text-primary' : 'bg-secondary-subtle text-secondary') }}">
-                                    {{ ucwords(str_replace('_', ' ', $role->name)) }}
-                                </span>
-                            @endforeach
-                            @if($user->roles->isEmpty())
-                                <span class="text-muted small">—</span>
-                            @endif
-                        </td>
-                        <td class="text-muted small">{{ $user->created_at->format('d M Y') }}</td>
-                        <td class="text-end pe-4">
-                            <button class="btn btn-sm btn-outline-primary me-1"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#editUserModal{{ $user->id }}">
-                                <i class="fa-solid fa-pen"></i>
-                            </button>
-                            @if($user->id !== auth()->id())
-                            <form action="{{ route('access.users.destroy', $user) }}" method="POST"
-                                  style="display:inline"
-                                  onsubmit="return confirm('Delete {{ $user->name }}?')">
-                                @csrf @method('DELETE')
-                                <button class="btn btn-sm btn-outline-danger">
-                                    <i class="fa-solid fa-trash"></i>
-                                </button>
-                            </form>
-                            @endif
-                        </td>
-                    </tr>
-
-                    {{-- Edit Modal --}}
-                    <div class="modal fade" id="editUserModal{{ $user->id }}" tabindex="-1">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <form action="{{ route('access.users.update', $user) }}" method="POST">
-                                    @csrf @method('PUT')
-                                    <div class="modal-header">
-                                        <h6 class="modal-title fw-semibold">Edit User</h6>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="mb-3">
-                                            <label class="form-label">Name</label>
-                                            <input type="text" name="name" class="form-control" value="{{ $user->name }}" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">Email</label>
-                                            <input type="email" name="email" class="form-control" value="{{ $user->email }}" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">Role</label>
-                                            <select name="role" class="form-select" required>
-                                                @foreach(\App\Enums\RoleEnum::getLabels() as $value => $label)
-                                                    <option value="{{ $value }}" {{ $user->role === $value ? 'selected' : '' }}>
-                                                        {{ $label }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                        <div class="mb-1">
-                                            <label class="form-label">New Password <small class="text-muted">(leave blank to keep current)</small></label>
-                                            <input type="password" name="password" class="form-control" placeholder="••••••••">
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                        <button type="submit" class="btn btn-sm btn-primary">Save Changes</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-
-                    @endforeach
-                </tbody>
             </table>
         </div>
-        @endif
     </div>
 </div>
+
+{{-- Edit modal container --}}
+<div id="editUserModalContainer"></div>
 
 {{-- Add User Modal --}}
 <div class="modal fade" id="addUserModal" tabindex="-1">
@@ -143,32 +48,31 @@
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label class="form-label">Name</label>
+                        <label class="form-label fw-semibold small">Name</label>
                         <input type="text" name="name" class="form-control @error('name') is-invalid @enderror"
                                value="{{ old('name') }}" required>
                         @error('name')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Email</label>
+                        <label class="form-label fw-semibold small">Email</label>
                         <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
                                value="{{ old('email') }}" required>
                         @error('email')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Role</label>
+                        <label class="form-label fw-semibold small">Role</label>
                         <select name="role" class="form-select @error('role') is-invalid @enderror" required>
                             <option value="" disabled selected>Select role</option>
                             @foreach(\App\Enums\RoleEnum::getLabels() as $value => $label)
-                                <option value="{{ $value }}" {{ old('role') === $value ? 'selected' : '' }}>
-                                    {{ $label }}
-                                </option>
+                                <option value="{{ $value }}" {{ old('role') === $value ? 'selected' : '' }}>{{ $label }}</option>
                             @endforeach
                         </select>
                         @error('role')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
                     <div class="mb-1">
-                        <label class="form-label">Password</label>
-                        <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" required>
+                        <label class="form-label fw-semibold small">Password</label>
+                        <input type="password" name="password"
+                               class="form-control @error('password') is-invalid @enderror" required>
                         @error('password')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
                 </div>
@@ -182,3 +86,42 @@
 </div>
 
 @endsection
+
+@push('scripts')
+<script>
+$(document).ready(function () {
+    $('#usersTable').DataTable({
+        serverSide: true,
+        processing: true,
+        order: [[0, 'desc']],
+        pageLength: 10,
+        lengthMenu: [10, 25, 50, 100],
+        columnDefs: [{ orderable: false, targets: [-1] }],
+        ajax: { url: '{{ route("access.users.index") }}' },
+        columns: [
+            { data: 'id',      className: 'text-muted small' },
+            { data: 'user' },
+            { data: 'email' },
+            { data: 'role' },
+            { data: 'created', className: 'small text-muted' },
+            { data: 'actions', className: 'text-nowrap no-sort' },
+        ],
+        language: {
+            search: '',
+            searchPlaceholder: 'Search users...',
+            processing: '<div class="text-center py-3"><i class="fa-solid fa-spinner fa-spin me-2"></i>Loading...</div>',
+            emptyTable: 'No users found'
+        }
+    });
+});
+
+function openUserModal(id) {
+    $.get('{{ url("admin/access/users") }}/' + id + '/edit', function(html) {
+        $('#editUserModalContainer').html(html);
+        $('#editUserModal').modal('show');
+    }).fail(function() {
+        alert('Could not load user. Please try again.');
+    });
+}
+</script>
+@endpush

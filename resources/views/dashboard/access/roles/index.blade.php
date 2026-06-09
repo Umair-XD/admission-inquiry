@@ -26,7 +26,11 @@
     @foreach($roles as $role)
     <div class="col-12">
         <div class="card">
-            <div class="card-header d-flex align-items-center justify-content-between py-3">
+            <div class="card-header d-flex align-items-center justify-content-between py-3"
+                 style="cursor:pointer;"
+                 data-bs-toggle="collapse"
+                 data-bs-target="#roleBody{{ $role->id }}"
+                 aria-expanded="true">
                 <div class="d-flex align-items-center gap-2">
                     <span class="rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center"
                           style="width:36px;height:36px;">
@@ -37,36 +41,41 @@
                         <small class="text-muted">{{ $role->users_count }} {{ Str::plural('user', $role->users_count) }} · {{ $role->permissions->count() }} {{ Str::plural('permission', $role->permissions->count()) }}</small>
                     </div>
                 </div>
-                <div class="d-flex gap-2">
+                <div class="d-flex align-items-center gap-2">
                     <button class="btn btn-sm btn-outline-primary"
                             data-bs-toggle="modal"
-                            data-bs-target="#editRoleModal{{ $role->id }}">
+                            data-bs-target="#editRoleModal{{ $role->id }}"
+                            onclick="event.stopPropagation()">
                         <i class="fa-solid fa-pen me-1"></i> Edit Permissions
                     </button>
                     @if($role->name !== 'super_admin')
                     <form action="{{ route('access.roles.destroy', $role) }}" method="POST"
-                          onsubmit="return confirm('Delete role {{ $role->name }}?')">
+                          onsubmit="return confirm('Delete role {{ $role->name }}?')"
+                          onclick="event.stopPropagation()">
                         @csrf @method('DELETE')
                         <button class="btn btn-sm btn-outline-danger">
                             <i class="fa-solid fa-trash"></i>
                         </button>
                     </form>
                     @endif
+                    <i class="fa-solid fa-chevron-up text-muted collapse-icon" style="transition:transform .2s;font-size:.8rem;"></i>
                 </div>
             </div>
 
             {{-- Permissions chips --}}
-            <div class="card-body">
-                @if($role->permissions->isEmpty())
-                    <span class="text-muted small">No permissions assigned.</span>
-                @else
-                    @foreach($role->permissions as $perm)
-                        <span class="badge bg-light text-dark border me-1 mb-1">
-                            <i class="fa-solid fa-key me-1 text-primary" style="font-size:.65rem;"></i>
-                            {{ $perm->name }}
-                        </span>
-                    @endforeach
-                @endif
+            <div class="collapse show" id="roleBody{{ $role->id }}">
+                <div class="card-body">
+                    @if($role->permissions->isEmpty())
+                        <span class="text-muted small">No permissions assigned.</span>
+                    @else
+                        @foreach($role->permissions as $perm)
+                            <span class="badge bg-light text-dark border me-1 mb-1">
+                                <i class="fa-solid fa-key me-1 text-primary" style="font-size:.65rem;"></i>
+                                {{ $perm->name }}
+                            </span>
+                        @endforeach
+                    @endif
+                </div>
             </div>
         </div>
     </div>
@@ -166,6 +175,18 @@
 
 @push('scripts')
 <script>
+document.querySelectorAll('[data-bs-toggle="collapse"]').forEach(function (el) {
+    const target = document.querySelector(el.dataset.bsTarget);
+    if (!target) return;
+
+    target.addEventListener('hide.bs.collapse', function () {
+        el.querySelector('.collapse-icon').style.transform = 'rotate(180deg)';
+    });
+    target.addEventListener('show.bs.collapse', function () {
+        el.querySelector('.collapse-icon').style.transform = 'rotate(0deg)';
+    });
+});
+
 document.querySelectorAll('.select-all-btn').forEach(btn => {
     btn.addEventListener('click', function () {
         const group = this.dataset.group;

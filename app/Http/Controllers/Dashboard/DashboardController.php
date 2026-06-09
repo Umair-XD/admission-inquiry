@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Dashboard\FacultyListRequest;
+use App\Http\Requests\Dashboard\InquiryListRequest;
+use App\Http\Requests\Dashboard\StudentListRequest;
 use App\Models\Course;
 use App\Models\Degree;
 use App\Models\Department;
@@ -32,11 +35,13 @@ class DashboardController extends Controller
         ));
     }
 
-    public function faculty()
+    public function faculty(FacultyListRequest $request)
     {
-        $faculties = Faculty::all();
+        if ($request->ajax()) {
+            return $request->processRequest();
+        }
 
-        return view('dashboard.faculty', compact('faculties'));
+        return view('dashboard.faculty');
     }
 
     public function facultyform()
@@ -82,11 +87,13 @@ class DashboardController extends Controller
 
     // }
 
-    public function inquires()
+    public function inquires(InquiryListRequest $request)
     {
-        $inquiries = Inquiry::with(['department', 'course', 'degrees'])->get();
+        if ($request->ajax()) {
+            return $request->processRequest();
+        }
 
-        return view('dashboard.inquires', compact('inquiries'));
+        return view('dashboard.inquires');
     }
 
     // public function inquiresform(){
@@ -214,6 +221,17 @@ class DashboardController extends Controller
         return redirect()->back()->with('success', 'Inquiry submitted successfully!');
     }
 
+    public function edit($id)
+    {
+        $inquiry = Inquiry::with('degrees')->findOrFail($id);
+        $matric = $inquiry->degrees->where('degree_id', 1)->first();
+        $inter = $inquiry->degrees->where('degree_id', 2)->first();
+        $bs = $inquiry->degrees->where('degree_id', 3)->first();
+        $ms = $inquiry->degrees->where('degree_id', 4)->first();
+
+        return view('dashboard.inquiry_edit_modal', compact('inquiry', 'matric', 'inter', 'bs', 'ms'));
+    }
+
     public function inquiresformUpdate(Request $request, $id)
     {
         // dd($request->all());
@@ -304,10 +322,12 @@ class DashboardController extends Controller
         return redirect()->back()->with('success', 'Inquiry deleted successfully!');
     }
 
-    public function student()
+    public function student(StudentListRequest $request)
     {
-        $students = Student::latest()->get();
+        if ($request->ajax()) {
+            return $request->processRequest();
+        }
 
-        return view('dashboard.student', compact('students'));
+        return view('dashboard.student');
     }
 }

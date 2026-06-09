@@ -93,6 +93,7 @@ Route::middleware(['auth', 'admin.auth'])->prefix('admin')->group(function () {
     // Access — Users
     Route::get('/access/users', [UserController::class, 'index'])->name('access.users.index');
     Route::post('/access/users', [UserController::class, 'store'])->name('access.users.store');
+    Route::get('/access/users/{user}/edit', [UserController::class, 'edit'])->name('access.users.edit');
     Route::put('/access/users/{user}', [UserController::class, 'update'])->name('access.users.update');
     Route::delete('/access/users/{user}', [UserController::class, 'destroy'])->name('access.users.destroy');
 
