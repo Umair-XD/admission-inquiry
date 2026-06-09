@@ -50,7 +50,7 @@
                     </button>
                     @if($role->name !== 'super_admin')
                     <form action="{{ route('access.roles.destroy', $role) }}" method="POST"
-                          onsubmit="return confirm('Delete role {{ $role->name }}?')"
+                          onsubmit="confirmDelete(this, 'Delete role {{ $role->name }}?'); return false;"
                           onclick="event.stopPropagation()">
                         @csrf @method('DELETE')
                         <button class="btn btn-sm btn-outline-danger">

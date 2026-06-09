@@ -76,7 +76,7 @@ class UserListRequest extends FormRequest
 
             $deleteBtn = '';
             if ($user->id !== $authId) {
-                $deleteBtn = '<form action="'.route('access.users.destroy', $user->id).'" method="POST" style="display:inline" onsubmit="return confirm(\'Delete '.addslashes($user->name).'?\')">'
+                $deleteBtn = '<form action="'.route('access.users.destroy', $user->id).'" method="POST" style="display:inline" onsubmit="confirmDelete(this,\'Delete '.addslashes($user->name).'?\'); return false;">'
                     .csrf_field().'<input type="hidden" name="_method" value="DELETE">'
                     .'<button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button></form>';
             }

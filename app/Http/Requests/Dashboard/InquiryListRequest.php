@@ -116,7 +116,7 @@ class InquiryListRequest extends FormRequest
                     onclick="openEditModal('.$inquiry->id.')" title="Edit">
                     <i class="fa-solid fa-pen"></i></button>
                 <form action="'.$deleteUrl.'" method="POST" style="display:inline"
-                    onsubmit="return confirm(\'Delete this inquiry?\')">
+                    onsubmit="confirmDelete(this,\'Delete this inquiry?\'); return false;">
                     '.csrf_field().'<input type="hidden" name="_method" value="DELETE">
                     <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
                 </form>';

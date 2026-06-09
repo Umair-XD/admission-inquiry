@@ -49,7 +49,7 @@
                             <i class="fa-solid fa-pen"></i> Edit
                         </button>
                         <form action="{{ route('departments.destroy', $dept) }}" method="POST"
-                              onsubmit="return confirm('Delete {{ addslashes($dept->name) }} and all its courses?')"
+                              onsubmit="confirmDelete(this, 'Delete {{ addslashes($dept->name) }} and all its courses?'); return false;"
                               onclick="event.stopPropagation()">
                             @csrf @method('DELETE')
                             <button class="btn btn-sm btn-outline-danger">
@@ -99,7 +99,7 @@
                                             </button>
                                             <form action="{{ route('courses.destroy', $course) }}" method="POST"
                                                   style="display:inline"
-                                                  onsubmit="return confirm('Delete this course?')">
+                                                  onsubmit="confirmDelete(this, 'Delete this course?'); return false;">
                                                 @csrf @method('DELETE')
                                                 <button class="btn btn-sm btn-outline-danger">
                                                     <i class="fa-solid fa-trash"></i>
