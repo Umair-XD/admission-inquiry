@@ -61,7 +61,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-semibold small">Role</label>
-                        <select name="role" class="form-select @error('role') is-invalid @enderror" required>
+                        <select name="role" class="form-select select2 @error('role') is-invalid @enderror" required>
                             <option value="" disabled selected>Select role</option>
                             @foreach(\App\Enums\RoleEnum::getLabels() as $value => $label)
                                 <option value="{{ $value }}" {{ old('role') === $value ? 'selected' : '' }}>{{ $label }}</option>

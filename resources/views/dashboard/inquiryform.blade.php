@@ -53,7 +53,7 @@
             <div class="col-md-3">
                 <label class="form-label fw-semibold">Department <span class="text-danger">*</span></label>
                 <select name="department_id" id="department"
-                        class="form-select @error('department_id') is-invalid @enderror" required>
+                        class="form-select select2 @error('department_id') is-invalid @enderror" required>
                     <option value="" disabled selected>Select Department</option>
                     @foreach($departments as $dept)
                         <option value="{{ $dept->id }}" {{ old('department_id') == $dept->id ? 'selected' : '' }}>
@@ -66,7 +66,7 @@
             <div class="col-md-3">
                 <label class="form-label fw-semibold">Course <span class="text-danger">*</span></label>
                 <select name="course_id" id="course"
-                        class="form-select @error('course_id') is-invalid @enderror" required>
+                        class="form-select select2 @error('course_id') is-invalid @enderror" required>
                     <option value="" disabled selected>Select Course</option>
                 </select>
                 @error('course_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
@@ -85,7 +85,7 @@
         <div class="row g-3">
             <div class="col-md-4">
                 <label class="form-label fw-semibold">Add Degree</label>
-                <select id="degree" class="form-select">
+                <select id="degree" class="form-select select2">
                     <option value="" disabled selected>Select Degree</option>
                     @foreach($degrees as $degree)
                         <option value="{{ $degree->id }}">{{ $degree->name }}</option>
@@ -216,19 +216,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Course loader
     document.getElementById('department').addEventListener('change', function () {
-        const courseSelect = document.getElementById('course');
-        courseSelect.innerHTML = '<option>Loading...</option>';
+        var courseSelect = $('#course');
+        courseSelect.empty().append('<option>Loading...</option>').trigger('change');
         fetch("{{ route('courses.by.department', ':id') }}".replace(':id', this.value))
             .then(r => r.json())
             .then(data => {
+                courseSelect.empty();
                 if (!data.length) {
-                    courseSelect.innerHTML = '<option value="" disabled selected>No courses available</option>';
-                    return;
+                    courseSelect.append('<option value="" disabled selected>No courses available</option>');
+                } else {
+                    courseSelect.append('<option value="" disabled selected>Select Course</option>');
+                    data.forEach(c => courseSelect.append(new Option(c.name, c.id)));
                 }
-                courseSelect.innerHTML = '<option value="" disabled selected>Select Course</option>';
-                data.forEach(c => {
-                    courseSelect.innerHTML += `<option value="${c.id}">${c.name}</option>`;
-                });
+                courseSelect.trigger('change'); // refresh Select2
             });
     });
 

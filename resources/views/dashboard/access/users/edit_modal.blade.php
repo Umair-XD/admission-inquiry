@@ -18,7 +18,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-semibold small">Role</label>
-                        <select name="role" class="form-select" required>
+                        <select name="role" class="form-select select2" required>
                             @foreach(\App\Enums\RoleEnum::getLabels() as $value => $label)
                                 <option value="{{ $value }}" {{ $user->role === $value ? 'selected' : '' }}>{{ $label }}</option>
                             @endforeach

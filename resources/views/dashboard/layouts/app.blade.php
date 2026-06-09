@@ -11,6 +11,8 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
         <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css">
 
         <style>
             :root {
@@ -325,9 +327,25 @@
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="{{ asset('dashboard/js/custom.js') }}"></script>
 
     <script>
+    // ── Init Select2 on all .select2 elements ──
+    $(document).ready(function () {
+        $('select.select2').select2({
+            theme: 'bootstrap-5',
+            width: '100%'
+        });
+        // Re-init inside modals when they open
+        $(document).on('shown.bs.modal', function (e) {
+            $(e.target).find('select.select2').select2({
+                theme: 'bootstrap-5',
+                width: '100%',
+                dropdownParent: $(e.target)
+            });
+        });
+    });
     // ── SweetAlert toast helper ──
     function showAlert(message, icon) {
         Swal.mixin({
