@@ -1,5 +1,5 @@
-
 @extends('frontend.layouts.app')
+@section('title', 'Students')
 
 @section('content')
 <!-- ================= INQUIRY INFO ================= -->

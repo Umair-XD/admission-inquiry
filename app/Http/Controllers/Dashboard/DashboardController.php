@@ -3,37 +3,47 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\Student;
-use App\Models\Faculty;
-use App\Models\Inquiry;
+use App\Models\Course;
 use App\Models\Degree;
 use App\Models\Department;
+use App\Models\Faculty;
+use App\Models\Inquiry;
 use App\Models\InquiryDegree;
-use App\Models\Course;
-
+use App\Models\Student;
+use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-
-    public function __construct()
+    // Auth is enforced via the 'admin.auth' middleware on the route group.
+    public function dashboard()
     {
-        if (!session()->get('is_admin')) {
-            abort(403);
-        }
-    }
-    public function dashboard(){
+        $totalInquiries = Inquiry::count();
+        $totalDepartments = Department::count();
+        $totalFaculty = Faculty::count();
+        $totalStudents = Student::count();
+        $recentInquiries = Inquiry::with('department')->latest()->take(10)->get();
 
-        $students=Student::all();
-        return view('dashboard.home', compact('students'));
+        return view('dashboard.home', compact(
+            'totalInquiries',
+            'totalDepartments',
+            'totalFaculty',
+            'totalStudents',
+            'recentInquiries'
+        ));
     }
-    public function faculty(){
-        $faculties=Faculty::all();
-        return view('dashboard.faculty',compact('faculties'));
+
+    public function faculty()
+    {
+        $faculties = Faculty::all();
+
+        return view('dashboard.faculty', compact('faculties'));
     }
-    public function facultyform(){
+
+    public function facultyform()
+    {
         return view('dashboard.facultyform');
     }
+
     public function storeFaculty(Request $request)
     {
         // dd($request->all());
@@ -52,13 +62,13 @@ class DashboardController extends Controller
 
         $facultyData = $request->only([
             'first_name', 'last_name', 'personal_email', 'official_email',
-            'phone', 'designation', 'degree', 'experience', 'specialization'
+            'phone', 'designation', 'degree', 'experience', 'specialization',
         ]);
 
         // Handle profile picture upload
         if ($request->hasFile('profile_picture')) {
             $file = $request->file('profile_picture');
-            $filename = time() . '_' . $file->getClientOriginalName();
+            $filename = time().'_'.$file->getClientOriginalName();
             $file->move(public_path('faculty_pictures'), $filename);
             $facultyData['profile_picture'] = $filename;
         }
@@ -79,7 +89,6 @@ class DashboardController extends Controller
         return view('dashboard.inquires', compact('inquiries'));
     }
 
-
     // public function inquiresform(){
     //     return view('dashboard.inquiryform');
     // }
@@ -98,7 +107,7 @@ class DashboardController extends Controller
         $inquiry->status = $request->status;
         $inquiry->save();
 
-        return back()->with('success','Status updated');
+        return back()->with('success', 'Status updated');
     }
 
     // public function getCourses($id)
@@ -240,8 +249,8 @@ class DashboardController extends Controller
             foreach ($request->degrees as $degree_id => $data) {
 
                 $degree = InquiryDegree::where('inquiry_id', $inquiry->id)
-                                    ->where('degree_id', $degree_id)
-                                    ->first();
+                    ->where('degree_id', $degree_id)
+                    ->first();
 
                 if ($degree) {
 
@@ -259,7 +268,7 @@ class DashboardController extends Controller
                 } else {
 
                     // ❗ create new if not exists
-                    $degree = new InquiryDegree();
+                    $degree = new InquiryDegree;
 
                     $degree->inquiry_id = $inquiry->id;
                     $degree->degree_id = $degree_id;
@@ -295,9 +304,10 @@ class DashboardController extends Controller
         return redirect()->back()->with('success', 'Inquiry deleted successfully!');
     }
 
+    public function student()
+    {
+        $students = Student::latest()->get();
 
-    public function student(){
-        return view('dashboard.student');
+        return view('dashboard.student', compact('students'));
     }
-
 }

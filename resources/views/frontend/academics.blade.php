@@ -1,6 +1,5 @@
-
-
 @extends('frontend.layouts.app')
+@section('title', 'Academics')
 
 @section('content')
     <div class="container mt-4">
@@ -11,7 +10,7 @@
             <!-- CIVIL -->
             <div class="col-md-4">
                 <div class="dept-card">
-                    <img src="assets\civildepartment.jfif">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Civil_engineering.jpg/640px-Civil_engineering.jpg">
                     <div class="dept-text">CIVIL ENGINEERING</div>
                 </div>
             </div>
@@ -19,7 +18,7 @@
             <!-- CHEMICAL -->
             <div class="col-md-4">
                 <div class="dept-card">
-                    <img src="assets\chemical department.jfif">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbHv9k1v2FsLEfxdSx-xO8AzjkRa-XB5pEuQ&s">
                     <div class="dept-text">CHEMICAL ENGINEERING</div>
                 </div>
             </div>

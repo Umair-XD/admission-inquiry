@@ -1,306 +1,112 @@
 @extends('dashboard.layouts.app')
+@section('title', 'Dashboard')
+@section('page-title', 'Dashboard')
+
 @section('content')
-      <!--======================================= Content Area Start =================================================-->
-      <div class="container-fluid">
-        <div class="row py-4">
-    <div class="col-12 col-md-12 col-lg-3 d-flex">
-        <div class="card mb-3 border-primary-subtle flex-fill">
-            <div class="row g-0 d-flex align-items-center h-100">
-              <div class="col-md-4 d-flex justify-content-center">
-                <i class="fa-solid fa-users fa-5x m-2 text-primary"></i>
-              </div>
-              <div class="col-md-8 d-flex flex-column">
-                <div class="card-body flex-grow-1 d-flex flex-column">
-                  <h5 class="card-title text-primary">Inquires</h5>
-                  <p class="card-text flex-grow-1">This is a wider card with supporting text.</p>
-                  <p class="card-text mt-auto"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+
+{{-- Stats Row --}}
+<div class="row g-3 mb-4">
+
+    <div class="col-6 col-md-3">
+        <div class="card h-100">
+            <div class="card-body d-flex align-items-center gap-3">
+                <div class="rounded-3 p-3 bg-primary bg-opacity-10">
+                    <i class="fa-solid fa-file-lines fa-lg text-primary"></i>
                 </div>
-              </div>
+                <div>
+                    <div class="fw-bold fs-4 text-dark">{{ $totalInquiries }}</div>
+                    <div class="text-muted small">Total Inquiries</div>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="col-12 col-md-12 col-lg-3 d-flex">
-        <div class="card mb-3 border-success-subtle flex-fill">
-            <div class="row g-0 d-flex align-items-center h-100">
-              <div class="col-md-4 d-flex justify-content-center">
-                <i class="fa-solid fa-building-columns fa-5x m-3 text-success"></i>
-              </div>
-              <div class="col-md-8 d-flex flex-column">
-                <div class="card-body flex-grow-1 d-flex flex-column">
-                  <h5 class="card-title text-success">Departments</h5>
-                  <p class="card-text flex-grow-1">Explore all university departments and faculties.</p>
-                  <p class="card-text mt-auto"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+    <div class="col-6 col-md-3">
+        <div class="card h-100">
+            <div class="card-body d-flex align-items-center gap-3">
+                <div class="rounded-3 p-3 bg-success bg-opacity-10">
+                    <i class="fa-solid fa-building-columns fa-lg text-success"></i>
                 </div>
-              </div>
+                <div>
+                    <div class="fw-bold fs-4 text-dark">{{ $totalDepartments }}</div>
+                    <div class="text-muted small">Departments</div>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="col-12 col-md-12 col-lg-3 d-flex">
-        <div class="card mb-3 border-danger-subtle flex-fill">
-            <div class="row g-0 d-flex align-items-center h-100">
-              <div class="col-md-4 d-flex justify-content-center">
-                <i class="fa-solid fa-user-graduate fa-5x m-2 text-danger"></i>
-              </div>
-              <div class="col-md-8 d-flex flex-column">
-                <div class="card-body flex-grow-1 d-flex flex-column">
-                  <h5 class="card-title text-danger">Admissions</h5>
-                  <p class="card-text flex-grow-1">Check admission criteria,<br>apply online.</p>
-                  <p class="card-text mt-auto"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+    <div class="col-6 col-md-3">
+        <div class="card h-100">
+            <div class="card-body d-flex align-items-center gap-3">
+                <div class="rounded-3 p-3 bg-warning bg-opacity-10">
+                    <i class="fa-solid fa-chalkboard-user fa-lg text-warning"></i>
                 </div>
-              </div>
+                <div>
+                    <div class="fw-bold fs-4 text-dark">{{ $totalFaculty }}</div>
+                    <div class="text-muted small">Faculty Members</div>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="col-12 col-md-12 col-lg-3 d-flex">
-        <div class="card mb-3 border-warning-subtle flex-fill">
-            <div class="row g-0 d-flex align-items-center h-100">
-              <div class="col-md-4 d-flex justify-content-center">
-                <i class="fa-solid fa-book-reader fa-5x m-3 text-warning"></i>
-              </div>
-              <div class="col-md-8 d-flex flex-column">
-                <div class="card-body flex-grow-1 d-flex flex-column">
-                  <h5 class="card-title text-warning">Library</h5>
-                  <p class="card-text flex-grow-1">Access books, e-resources, and research materials.</p>
-                  <p class="card-text mt-auto"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+    <div class="col-6 col-md-3">
+        <div class="card h-100">
+            <div class="card-body d-flex align-items-center gap-3">
+                <div class="rounded-3 p-3 bg-danger bg-opacity-10">
+                    <i class="fa-solid fa-user-graduate fa-lg text-danger"></i>
                 </div>
-              </div>
+                <div>
+                    <div class="fw-bold fs-4 text-dark">{{ $totalStudents }}</div>
+                    <div class="text-muted small">Students</div>
+                </div>
             </div>
         </div>
+    </div>
+
+</div>
+
+{{-- Recent Inquiries --}}
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <span><i class="fa-solid fa-clock-rotate-left me-2 text-primary"></i>Recent Inquiries</span>
+        <a href="{{ route('inquires') }}" class="btn btn-sm btn-outline-primary">View All</a>
+    </div>
+    <div class="card-body p-0">
+        @if($recentInquiries->isEmpty())
+            <p class="text-center text-muted py-4 mb-0">No inquiries yet.</p>
+        @else
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Name</th>
+                        <th>Department</th>
+                        <th>Phone</th>
+                        <th>Status</th>
+                        <th class="pe-4">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($recentInquiries as $inquiry)
+                    <tr>
+                        <td class="ps-4 fw-medium">{{ $inquiry->name }}</td>
+                        <td>{{ $inquiry->department?->name ?? '—' }}</td>
+                        <td>{{ $inquiry->phone }}</td>
+                        <td>
+                            <span class="badge rounded-pill
+                                {{ $inquiry->status === 'active' ? 'bg-success-subtle text-success' :
+                                   ($inquiry->status === 'inactive' ? 'bg-danger-subtle text-danger' : 'bg-warning-subtle text-warning') }}">
+                                {{ ucfirst($inquiry->status) }}
+                            </span>
+                        </td>
+                        <td class="pe-4 text-muted small">{{ $inquiry->created_at->format('d M Y') }}</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+        @endif
     </div>
 </div>
 
-      </div>
-      <div class="container-fluid">
-        <div class="row mb-5">
-          <div class="col-lg-12">
-            <div class="card">
-              <h5 class="card-header">Last List</h5>
-              <div class="card-body">
-
-                <table id="example" class="table table-striped" style="width:100%">
-                  <thead>
-                      <tr>
-                          <th>Name</th>
-                          <th>Department</th>
-                          <th>Age</th>
-                          <th>Phone no</th>
-                          <th>ID Card</th>
-                          <th>Matric Marks</th>
-                          <th>Part 1 marks</th>
-                          <th>Part 2 marks</th>
-                          <th>Entry test marks</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                    @foreach ($students as $student)
-
-                      <tr>
-                         <td>{{$student->name}}</td>
-                         <td>{{$student->department}}</td>
-                         <td>{{$student->age}}</td>
-                         <td>{{$student->phone_no}}</td>
-                         <td>{{$student->id_card}}</td>
-                         <td>{{$student->matric_marks}}</td>
-                         <td>{{$student->part1_marks}}</td>
-                         <td>{{$student->part2_marks}}</td>
-                         <td>{{$student->entry_test_marks}}</td>
-                       </tr>
-
-                    @endforeach
-
-
-
-
-
-                     {{-- <tr>
-                       <td>Fatima Zahra</td>
-                       <td>Pre-Medical</td>
-                       <td>15</td>
-                       <td>0309-3344556</td>
-                       <td>35206-3344556-6</td>
-                       <td>925</td>
-                       <td>470</td>
-                       <td>455</td>
-                       <td>90</td>
-                     </tr>
-
-                     <tr>
-                       <td>Usman Tariq</td>
-                       <td>Pre-Engineering</td>
-                       <td>15</td>
-                       <td>0342-7788990</td>
-                       <td>35207-7788990-7</td>
-                       <td>860</td>
-                       <td>430</td>
-                       <td>430</td>
-                       <td>70</td>
-                     </tr>
-
-                     <tr>
-                       <td>Maryam Iqbal</td>
-                       <td>Arts</td>
-                       <td>15</td>
-                       <td>0315-6677889</td>
-                       <td>35208-6677889-8</td>
-                       <td>845</td>
-                       <td>425</td>
-                       <td>420</td>
-                       <td>69</td>
-                     </tr>
-
-                     <tr>
-                       <td>Bilal Ahmed</td>
-                       <td>Computer Science</td>
-                       <td>15</td>
-                       <td>0336-2211334</td>
-                       <td>35209-2211334-9</td>
-                       <td>890</td>
-                       <td>445</td>
-                       <td>445</td>
-                       <td>77</td>
-                     </tr>
-
-                     <tr>
-                       <td>Zain Abbas</td>
-                       <td>Pre-Engineering</td>
-                       <td>15</td>
-                       <td>0307-8899001</td>
-                       <td>35210-8899001-0</td>
-                       <td>865</td>
-                       <td>430</td>
-                       <td>435</td>
-                       <td>71</td>
-                     </tr>
-
-                     <tr>
-                       <td>Noor Fatima</td>
-                       <td>Pre-Medical</td>
-                       <td>15</td>
-                       <td>0324-5566001</td>
-                       <td>35211-5566001-1</td>
-                       <td>905</td>
-                       <td>455</td>
-                       <td>450</td>
-                       <td>84</td>
-                     </tr>
-
-                     <tr>
-                       <td>Hamza Shah</td>
-                       <td>Computer Science</td>
-                       <td>15</td>
-                       <td>0319-3344778</td>
-                       <td>35212-3344778-2</td>
-                       <td>875</td>
-                       <td>438</td>
-                       <td>437</td>
-                       <td>73</td>
-                     </tr>
-
-                     <tr>
-                       <td>Iqra Nadeem</td>
-                       <td>Arts</td>
-                       <td>15</td>
-                       <td>0348-1122998</td>
-                       <td>35213-1122998-3</td>
-                       <td>830</td>
-                       <td>415</td>
-                       <td>415</td>
-                       <td>65</td>
-                     </tr>
-
-                     <tr>
-                       <td>Saad Ullah</td>
-                       <td>Pre-Engineering</td>
-                       <td>15</td>
-                       <td>0305-7788112</td>
-                       <td>35214-7788112-4</td>
-                       <td>855</td>
-                       <td>425</td>
-                       <td>430</td>
-                       <td>69</td>
-                     </tr>
-
-                     <tr>
-                       <td>Hira Salman</td>
-                       <td>Pre-Medical</td>
-                       <td>15</td>
-                       <td>0331-4455667</td>
-                       <td>35215-4455667-5</td>
-                       <td>920</td>
-                       <td>465</td>
-                       <td>455</td>
-                       <td>88</td>
-                     </tr>
-
-                     <tr>
-                       <td>Abdullah Noor</td>
-                       <td>Computer Science</td>
-                       <td>15</td>
-                       <td>0320-6677009</td>
-                       <td>35216-6677009-6</td>
-                       <td>885</td>
-                       <td>440</td>
-                       <td>445</td>
-                       <td>76</td>
-                     </tr>
-
-                     <tr>
-                       <td>Laiba Ahmed</td>
-                       <td>Arts</td>
-                       <td>15</td>
-                       <td>0341-9988775</td>
-                       <td>35217-9988775-7</td>
-                       <td>835</td>
-                       <td>418</td>
-                       <td>417</td>
-                       <td>66</td>
-                     </tr>
-
-                     <tr>
-                       <td>Shayan Malik</td>
-                       <td>Pre-Engineering</td>
-                       <td>15</td>
-                       <td>0308-2233449</td>
-                       <td>35218-2233449-8</td>
-                       <td>868</td>
-                       <td>434</td>
-                       <td>434</td>
-                       <td>72</td>
-                     </tr>
-
-                     <tr>
-                       <td>Anaya Rizvi</td>
-                       <td>Pre-Medical</td>
-                       <td>15</td>
-                       <td>0339-5566889</td>
-                       <td>35219-5566889-9</td>
-                       <td>915</td>
-                       <td>460</td>
-                       <td>455</td>
-                       <td>86</td>
-                     </tr>
-
-                     <tr>
-                       <td>Rehan Siddiq</td>
-                       <td>Computer Science</td>
-                       <td>15</td>
-                       <td>0316-8899443</td>
-                       <td>35220-8899443-0</td>
-                       <td>878</td>
-                       <td>439</td>
-                       <td>439</td>
-                       <td>74</td>
-                     </tr> --}}
-
-                  </tbody>
-              </table>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      @endsection
-
+@endsection

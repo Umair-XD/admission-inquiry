@@ -1,100 +1,105 @@
-
 @extends('frontend.layouts.app')
+@section('title', 'Register')
 
 @section('content')
-  <div class="container position-relative z-1 px-3">
+<div class="container py-4 px-3">
     <div class="row justify-content-center">
-      <!-- Responsive Columns -->
-      <div class="col-12 col-sm-10 col-md-8 col-lg-5">
+        <div class="col-12 col-sm-10 col-md-8 col-lg-5">
+            <div class="card shadow-lg rounded-4">
+                <div class="card-body text-dark p-4 p-sm-5">
 
-        <div class="card glass-card shadow-lg rounded-4">
-          <div class="card-body text-black p-4 p-sm-5">
+                    <h3 class="text-center fw-bold mb-1">Create Account</h3>
+                    <p class="text-center text-muted mb-4 small">Register to submit your admission inquiry</p>
 
-            <h3 class="text-center fw-bold mb-2">Welcome</h3>
-            <p class="text-center text-black mb-4 small">
-              Please login to your account
-            </p>
+                    @if(session('error'))
+                        <div class="alert alert-danger py-2 small">{{ session('error') }}</div>
+                    @endif
 
-            <form class="d-grid gap-3" method="POST" action="/student/register">
-                 @csrf
+                    @if($errors->any())
+                        <div class="alert alert-danger py-2 small">
+                            <ul class="mb-0 ps-3">
+                                @foreach($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
 
-                <!-- Name -->
-                <div>
-                    <label class="form-label fw-semibold">Full Name</label>
-                    <input type="text" name="name"
-                        class="form-control bg-transparent text-black border-black"
-                        placeholder="Enter your full name" required>
+                    <form class="d-grid gap-3" method="POST" action="{{ url('/student/register') }}">
+                        @csrf
+
+                        <div>
+                            <label class="form-label fw-semibold">Full Name</label>
+                            <input type="text" name="name"
+                                   class="form-control @error('name') is-invalid @enderror"
+                                   placeholder="Enter your full name"
+                                   value="{{ old('name') }}" required>
+                            @error('name')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        </div>
+
+                        <div>
+                            <label class="form-label fw-semibold">CNIC</label>
+                            <input type="text" name="cnic"
+                                   class="form-control @error('cnic') is-invalid @enderror"
+                                   placeholder="xxxxx-xxxxxxx-x"
+                                   value="{{ old('cnic') }}" required>
+                            @error('cnic')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        </div>
+
+                        <div>
+                            <label class="form-label fw-semibold">Mobile No</label>
+                            <input type="text" name="mobile"
+                                   class="form-control @error('mobile') is-invalid @enderror"
+                                   placeholder="03XXXXXXXXX"
+                                   value="{{ old('mobile') }}" required>
+                            @error('mobile')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        </div>
+
+                        <div>
+                            <label class="form-label fw-semibold">Age</label>
+                            <input type="number" name="age"
+                                   class="form-control @error('age') is-invalid @enderror"
+                                   placeholder="Age" min="1" max="120"
+                                   value="{{ old('age') }}" required>
+                            @error('age')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        </div>
+
+                        <div>
+                            <label class="form-label fw-semibold">Address</label>
+                            <textarea name="address" rows="2"
+                                      class="form-control @error('address') is-invalid @enderror"
+                                      placeholder="Enter your address" required>{{ old('address') }}</textarea>
+                            @error('address')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        </div>
+
+                        <div>
+                            <label class="form-label fw-semibold">Password</label>
+                            <input type="password" name="password"
+                                   class="form-control @error('password') is-invalid @enderror"
+                                   placeholder="Minimum 8 characters" required>
+                            @error('password')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        </div>
+
+                        <div>
+                            <label class="form-label fw-semibold">Confirm Password</label>
+                            <input type="password" name="password_confirmation"
+                                   class="form-control"
+                                   placeholder="Repeat password" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-success fw-semibold py-2">
+                            Create Account
+                        </button>
+
+                        <p class="text-center small text-muted mb-0">
+                            Already registered?
+                            <a href="{{ route('login') }}" class="text-success fw-semibold">Login here</a>
+                        </p>
+                    </form>
+
                 </div>
-
-                <!-- CNIC -->
-
-                <div>
-                    <label class="form-label fw-semibold">CNIC</label>
-                    <input type="text" name="cnic"
-                    class="form-control bg-transparent text-black border-black"
-                    placeholder="12345-1234567-1"
-                    pattern="\d{5}-\d{7}-\d{1}"
-                    title="CNIC must be like 12345-1234567-1"
-                    required>
-                </div>
-
-                <!-- Mobile -->
-                <div>
-                    <label class="form-label fw-semibold">Mobile No</label>
-                    <input type="text" name="mobile"
-                    class="form-control bg-transparent text-black border-black"
-                    placeholder="03XXXXXXXXX"
-                    pattern="03[0-9]{9}"
-                    title="Mobile must start with 03 and be 11 digits"
-                    required>
-                </div>
-
-                <div>
-                    <label class="form-label fw-semibold">Age</label>
-                    <input type="number" name="age"
-                        class="form-control bg-transparent text-black border-black"
-                        placeholder="Age" required>
-                </div>
-
-                <!-- Address -->
-                <div>
-                    <label class="form-label fw-semibold">Address</label>
-                    <textarea name="address" rows="3"
-                            class="form-control bg-transparent text-black border-black"
-                            placeholder="Enter your address" required></textarea>
-                </div>
-
-                <!-- Password -->
-                <div>
-                    <label class="form-label fw-semibold">Password</label>
-                    <input type="password" name="password"
-                    class="form-control bg-transparent text-black border-black"
-                    placeholder="Enter password"
-                    minlength="8"
-                    pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}"
-                    title="Must contain at least 8 characters, 1 uppercase, 1 lowercase, 1 number"
-                    required>
-                </div>
-
-                <!-- Confirm Password -->
-                <div>
-                    <label class="form-label fw-semibold">Confirm Password</label>
-                    <input type="password" name="password_confirmation"
-                        class="form-control bg-transparent text-black border-black"
-                        placeholder="Confirm password" required>
-                </div>
-
-                <button type="submit" class="btn btn-primary fw-semibold py-2">
-                    Register
-                </button>
-
-            </form>
-
-          </div>
+            </div>
         </div>
-
-      </div>
     </div>
-  </div>
+</div>
 @endsection
-

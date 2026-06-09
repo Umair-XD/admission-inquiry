@@ -1,100 +1,71 @@
-
-      @extends('dashboard.layouts.app')
+@extends('dashboard.layouts.app')
+@section('title', 'Faculty')
+@section('page-title', 'Faculty')
 
 @section('content')
-      <!--======================================= Content Area Start =================================================-->
-      <div class="container-fluid">
-        <div class="row py-4">
-            <div class="col-12 col-md-12 col-lg-12 d-flex justify-content-between">
-              <h3 class="h3 text-primary"><i class="fa-solid fa-user"></i> Faculty Info </h3>
-              <a href="{{route('facultyform')}}" class="btn btn-outline-primary">Add Faculty </a>
-            </div>
-        </div>
-      </div>
-      <div class="container-fluid">
-        <div class="row mb-5">
-          <div class="col-lg-12">
-            <div class="card">
-              <h5 class="card-header">Last List</h5>
-              <div class="card-body">
 
-                <table id="example" class="table table-striped" style="width:100%">
-                  <thead>
-                       <tr>
-                           <th>Profile</th>
-                           <th>FirstName</th>
-                           <th>LastName</th>
-                           <th>Personal Email</th>
-                           <th>Official Email</th>
-                           <th>Phone No</th>
-                           <th>Designation</th>
-                           <th>Last Degree</th>
-                           <th>Experience</th>
-                           <th>Specialization</th>
-                        </tr>
-                  </thead>
-                  <tbody>
-                    @foreach ($faculties as $faculty)
-                        <tr>
-                            <!-- Profile Picture -->
-                            <td>
-                                @if ($faculty->profile_picture)
-                                    <img src="{{ asset('faculty_pictures/' . $faculty->profile_picture) }}" width="40" height="40">
-                                @else
-                                    <img src="https://randomuser.me/api/portraits/men/1.jpg" width="40" style="border-radius:50%;">
-                                @endif
-                            </td>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h4 class="fw-bold mb-0 text-dark"><i class="fa-solid fa-chalkboard-user me-2 text-primary"></i>Faculty</h4>
+        <small class="text-muted">All registered faculty members</small>
+    </div>
+    <a href="{{ route('facultyform') }}" class="btn btn-primary">
+        <i class="fa-solid fa-plus me-1"></i> Add Faculty
+    </a>
+</div>
 
-                            <!-- Names -->
-                            <td>{{ $faculty->first_name }}</td>
-                            <td>{{ $faculty->last_name }}</td>
-
-                            <!-- Emails -->
-                            <td>{{ $faculty->personal_email }}</td>
-                            <td>{{ $faculty->official_email }}</td>
-
-                            <!-- Phone & Designation -->
-                            <td>{{ $faculty->phone }}</td>
-                            <td>{{ $faculty->designation }}</td>
-
-                            <!-- Degree & Experience -->
-                            <td>{{ $faculty->degree }}</td>
-                            <td>{{ $faculty->experience }} Years</td>
-
-                            <!-- Specialization -->
-                            <td>{{ $faculty->specialization }}</td>
-                        </tr>
+<div class="card">
+    <div class="card-body p-0">
+        @if($faculties->isEmpty())
+            <p class="text-center text-muted py-5 mb-0">No faculty members yet.</p>
+        @else
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Profile</th>
+                        <th>Name</th>
+                        <th>Personal Email</th>
+                        <th>Official Email</th>
+                        <th>Phone</th>
+                        <th>Designation</th>
+                        <th>Degree</th>
+                        <th>Experience</th>
+                        <th class="pe-4">Specialization</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($faculties as $faculty)
+                    <tr>
+                        <td class="ps-4">
+                            @if($faculty->profile_picture)
+                                <img src="{{ asset('faculty_pictures/' . $faculty->profile_picture) }}"
+                                     width="38" height="38"
+                                     class="rounded-circle object-fit-cover border">
+                            @else
+                                <div class="rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center fw-bold"
+                                     style="width:38px;height:38px;font-size:.85rem;">
+                                    {{ strtoupper(substr($faculty->first_name, 0, 1)) }}
+                                </div>
+                            @endif
+                        </td>
+                        <td class="fw-medium">{{ $faculty->first_name }} {{ $faculty->last_name }}</td>
+                        <td class="text-muted small">{{ $faculty->personal_email }}</td>
+                        <td class="text-muted small">{{ $faculty->official_email }}</td>
+                        <td>{{ $faculty->phone }}</td>
+                        <td>
+                            <span class="badge bg-primary-subtle text-primary">{{ $faculty->designation }}</span>
+                        </td>
+                        <td>{{ $faculty->degree }}</td>
+                        <td>{{ $faculty->experience }} yrs</td>
+                        <td class="pe-4 text-muted small">{{ $faculty->specialization }}</td>
+                    </tr>
                     @endforeach
-
-
-
-                    </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
+                </tbody>
+            </table>
         </div>
-      </div>
-      @endsection
+        @endif
+    </div>
+</div>
 
-
-    <script src="js/jquery.js"></script>
-    <script src="js/bootstrap.bundle.js"></script>
-    <script src="fontawesome/js/all.min.js"></script>
-    <script src="js/datatable.js"></script>
-    <script src="js/datatable.bootstrap.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
-
-<!-- DataTables Buttons JavaScript -->
-<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.bootstrap5.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.2.9/js/buttons.print.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.2.9/js/buttons.colVis.min.js"></script>
-
-    <script src="js/custom.js"></script>
-</body>
-</html>
+@endsection

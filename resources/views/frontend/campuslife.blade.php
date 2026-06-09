@@ -1,5 +1,5 @@
-
 @extends('frontend.layouts.app')
+@section('title', 'Campus Life')
 
 @section('content')
 <!-- ================= HERO SECTION ================= -->

@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\Dashboard\DepartmentController;
+use App\Http\Controllers\Dashboard\Access\UserController;
+use App\Http\Controllers\Dashboard\Access\RoleController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ViewController;
 use App\Http\Controllers\AdminController;
@@ -38,10 +41,15 @@ Route::get('/student/logout', [ViewController::class, 'logout'])->name('student.
 |--------------------------------------------------------------------------
 */
 
-Route::get('/admin', [AdminController::class, 'loginForm'])->name('admin.login');
-Route::post('/admin/login', [AdminController::class, 'login'])->name('admin.login.submit');
-Route::get('/admin/dashboard', [DashboardController::class, 'dashboard'])->name('admin.dashboard');
-Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
+// Guest-only admin login routes
+Route::middleware('guest')->group(function () {
+    Route::get('/admin', [AdminController::class, 'loginForm'])->name('admin.login');
+    Route::post('/admin/login', [AdminController::class, 'login'])->name('admin.login.submit');
+});
+
+// Admin logout (needs auth)
+Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout')->middleware('auth');
+
 Route::get('/student/inquiry', [ViewController::class, 'studentInquiry'])->name('student.inquiry');
 Route::post('/student/inquiry/store', [ViewController::class, 'studentInquiryStore'])->name('studentInquiry.store');
 Route::get('/get-courses/{id}', [ViewController::class, 'getCourses'])
@@ -57,21 +65,41 @@ Route::post('student/inquiryform', [ViewController::class, 'inquiresformStore'])
 |--------------------------------------------------------------------------
 */
 
-Route::group([], function () {
+Route::middleware(['auth', 'admin.auth'])->prefix('admin')->group(function () {
 
-    Route::get('/dashboard/home', [DashboardController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('admin.dashboard');
     Route::get('/faculty', [DashboardController::class, 'faculty'])->name('faculty');
-    Route::get('/facultyform', [DashboardController::class, 'facultyform'])->name('facultyform');
-    Route::post('/facultyform', [DashboardController::class, 'storeFaculty'])->name('facultyform.store');
-    Route::get('/inquires', [DashboardController::class, 'inquires'])->name('inquires');
-    Route::get('/inquiryform', [DashboardController::class, 'inquiresform'])->name('inquiryform');
-    Route::post('/inquiryform', [DashboardController::class, 'inquiresformStore'])->name('inquiryform.store');
-    Route::get('/student', [DashboardController::class, 'student'])->name('student');
-    Route::put('/inquiry/status/{id}', [DashboardController::class, 'updateStatus'])
-    ->name('inquiry.status.update');
-    Route::get('/inquiry/edit/{id}', [DashboardController::class, 'edit'])->name('inquiry.edit');
-    Route::put('/inquiry/update/{id}', [DashboardController::class, 'inquiresformUpdate'])->name('inquiry.update');
-    Route::delete('/inquiry/delete/{id}', [DashboardController::class, 'destroy'])->name('inquiry.delete');
-    // Route::get('/get-courses/{id}', [DashboardController::class, 'getCourses']);
+    Route::get('/faculty/create', [DashboardController::class, 'facultyform'])->name('facultyform');
+    Route::post('/faculty/create', [DashboardController::class, 'storeFaculty'])->name('facultyform.store');
+    Route::get('/inquiries', [DashboardController::class, 'inquires'])->name('inquires');
+    Route::get('/inquiry/create', [DashboardController::class, 'inquiresform'])->name('inquiryform');
+    Route::post('/inquiry/create', [DashboardController::class, 'inquiresformStore'])->name('inquiryform.store');
+    Route::put('/inquiry/status/{id}', [DashboardController::class, 'updateStatus'])->name('inquiry.status.update');
+    Route::get('/inquiry/{id}/edit', [DashboardController::class, 'edit'])->name('inquiry.edit');
+    Route::put('/inquiry/{id}/update', [DashboardController::class, 'inquiresformUpdate'])->name('inquiry.update');
+    Route::delete('/inquiry/{id}/delete', [DashboardController::class, 'destroy'])->name('inquiry.delete');
+    Route::get('/students', [DashboardController::class, 'student'])->name('admin.students');
+
+    // Departments & Courses
+    Route::get('/departments', [DepartmentController::class, 'index'])->name('departments.index');
+    Route::post('/departments', [DepartmentController::class, 'store'])->name('departments.store');
+    Route::put('/departments/{department}', [DepartmentController::class, 'update'])->name('departments.update');
+    Route::delete('/departments/{department}', [DepartmentController::class, 'destroy'])->name('departments.destroy');
+
+    Route::post('/departments/{department}/courses', [DepartmentController::class, 'storeCourse'])->name('courses.store');
+    Route::put('/courses/{course}', [DepartmentController::class, 'updateCourse'])->name('courses.update');
+    Route::delete('/courses/{course}', [DepartmentController::class, 'destroyCourse'])->name('courses.destroy');
+
+    // Access — Users
+    Route::get('/access/users', [UserController::class, 'index'])->name('access.users.index');
+    Route::post('/access/users', [UserController::class, 'store'])->name('access.users.store');
+    Route::put('/access/users/{user}', [UserController::class, 'update'])->name('access.users.update');
+    Route::delete('/access/users/{user}', [UserController::class, 'destroy'])->name('access.users.destroy');
+
+    // Access — Roles
+    Route::get('/access/roles', [RoleController::class, 'index'])->name('access.roles.index');
+    Route::post('/access/roles', [RoleController::class, 'store'])->name('access.roles.store');
+    Route::put('/access/roles/{role}', [RoleController::class, 'update'])->name('access.roles.update');
+    Route::delete('/access/roles/{role}', [RoleController::class, 'destroy'])->name('access.roles.destroy');
 
 });

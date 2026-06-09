@@ -1,5 +1,5 @@
-black
 @extends('frontend.layouts.app')
+@section('title', 'Downloads')
 
 @section('content')
 <!-- ================= INSTRUCTIONS ================= -->

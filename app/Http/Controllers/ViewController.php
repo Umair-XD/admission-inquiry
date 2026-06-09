@@ -2,50 +2,70 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Inquiry;
-use App\Models\Student;
+use App\Models\Course;
 use App\Models\Degree;
 use App\Models\Department;
-use App\Models\Course;
+use App\Models\Inquiry;
 use App\Models\InquiryDegree;
+use App\Models\Student;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 
-
 class ViewController extends Controller
 {
-     public function home(){
+    public function home()
+    {
         return view('frontend.home');
     }
-     public function about(){
+
+    public function about()
+    {
         return view('frontend.about');
     }
- public function academics(){
+
+    public function academics()
+    {
         return view('frontend.academics');
     }
-   public function admission(){
+
+    public function admission()
+    {
         return view('frontend.admission');
     }
- public function alumni(){
+
+    public function alumni()
+    {
         return view('frontend.alumni');
     }
-     public function campuslife(){
+
+    public function campuslife()
+    {
         return view('frontend.campuslife');
     }
-     public function download(){
+
+    public function download()
+    {
         return view('frontend.download');
     }
-    public function home2(){
+
+    public function home2()
+    {
         return view('frontend.home2');
     }
-     public function institute(){
+
+    public function institute()
+    {
         return view('frontend.institute');
     }
-     public function job(){
+
+    public function job()
+    {
         return view('frontend.job');
     }
-     public function login(){
+
+    public function login()
+    {
         return view('frontend.login');
     }
 
@@ -62,13 +82,17 @@ class ViewController extends Controller
         $student = Student::where('cnic', $request->cnic)->first();
 
         // ❌ not found
-        if (!$student) {
-            return redirect()->back()->with('error', 'Invalid CNIC or password');
+        if (! $student) {
+            return redirect()->back()
+                ->with('error', 'Invalid CNIC or password')
+                ->with('open_auth_modal', 'login');
         }
 
         // ❌ wrong password
-        if (!Hash::check($request->password, $student->password)) {
-            return redirect()->back()->with('error', 'Invalid CNIC or password');
+        if (! Hash::check($request->password, $student->password)) {
+            return redirect()->back()
+                ->with('error', 'Invalid CNIC or password')
+                ->with('open_auth_modal', 'login');
         }
 
         // ✅ LOGIN SUCCESS - store session
@@ -78,10 +102,10 @@ class ViewController extends Controller
         return redirect('/')->with('success', 'Logged in successfully!');
     }
 
-    public function register(){
+    public function register()
+    {
         return view('frontend.register');
     }
-
 
     public function saveStudent(Request $request)
     {
@@ -104,7 +128,7 @@ class ViewController extends Controller
         }
 
         // ✅ CREATE STUDENT
-        $student = new Student();
+        $student = new Student;
         $student->name = $request->name;
         $student->cnic = $request->cnic;
         $student->mobile = $request->mobile;
@@ -116,24 +140,32 @@ class ViewController extends Controller
 
         // 🎯 SUCCESS MESSAGE + FLAG FOR LOGIN MODAL
         return redirect()->back()
-        ->with('success', 'Account created successfully!')
-        ->with('open_auth_modal', true);
+            ->with('success', 'Account created successfully! Please login.')
+            ->with('open_auth_modal', 'login');
     }
 
-     public function officeofrector(){
+    public function officeofrector()
+    {
         return view('frontend.officeofrector');
     }
-     public function researchinnovation(){
+
+    public function researchinnovation()
+    {
         return view('frontend.researchinnovation');
     }
 
-     public function signin(){
+    public function signin()
+    {
         return view('frontend.signin');
     }
-     public function student(){
+
+    public function student()
+    {
         return view('frontend.student');
     }
-    public function profile(){
+
+    public function profile()
+    {
         return view('frontend.profile');
     }
 
@@ -152,7 +184,7 @@ class ViewController extends Controller
             $student = Student::find(session('student_id'));
         }
 
-        return view('dashboard.studentInquiry', compact('student','degrees', 'departments'));
+        return view('dashboard.studentInquiry', compact('student', 'degrees', 'departments'));
     }
 
     public function studentInquiryStore(Request $request)
@@ -166,7 +198,7 @@ class ViewController extends Controller
             'cnic' => 'required',
         ]);
 
-        $inquiry = new Inquiry();
+        $inquiry = new Inquiry;
         $inquiry->name = $request->name;
         $inquiry->age = $request->age;
         $inquiry->department = $request->department;
@@ -190,6 +222,7 @@ class ViewController extends Controller
     {
         $courses = Course::where('department_id', $id)
             ->get();
+
         return response()->json($courses);
     }
 

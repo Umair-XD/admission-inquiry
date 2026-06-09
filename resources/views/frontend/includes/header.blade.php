@@ -7,7 +7,7 @@
 @endif
 <div class="header-bg">
     <div class="d-flex justify-content-center align-items-center gap-3 py-2">
-        <img src="{{ asset('faculty_pictures/nfc.png') }}" height="70">
+        <img src="{{ asset('logo.png') }}" height="70">
 
         <div class="fw-bold text-dark fs-3 m-0">
             NFC Institute of Engineering and Fertilizer Research
@@ -27,7 +27,7 @@
 
 
 
-    @if(session()->get('is_admin'))
+    @if(auth()->check() && auth()->user()->isSuperAdmin())
         <a href="{{ route('admin.dashboard') }}"
            class="text-white text-decoration-none mx-3 small fw-semibold text-uppercase sub-header">
             Dashboard
@@ -117,25 +117,136 @@
 </div>
 
 
-<!-- Modal -->
-<div class="modal fade" id="authModal" tabindex="-1">
+<!-- Auth Modal — Login / Register tabs -->
+<div class="modal fade" id="authModal" tabindex="-1" aria-labelledby="authModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content p-4 text-center">
+        <div class="modal-content rounded-4 shadow">
 
-            <h4 class="mb-3">Login Required</h4>
+            <div class="modal-header border-0 pb-0">
+                <ul class="nav nav-tabs w-100 border-0" id="authTabs">
+                    <li class="nav-item flex-fill text-center">
+                        <button class="nav-link w-100 fw-semibold {{ session('open_auth_modal') === 'login' || !session('open_auth_modal') ? 'active' : '' }}"
+                                data-bs-toggle="tab" data-bs-target="#loginTab">
+                            Login
+                        </button>
+                    </li>
+                    <li class="nav-item flex-fill text-center">
+                        <button class="nav-link w-100 fw-semibold {{ session('open_auth_modal') === 'register' ? 'active' : '' }}"
+                                data-bs-toggle="tab" data-bs-target="#registerTab">
+                            Register
+                        </button>
+                    </li>
+                </ul>
+                <button type="button" class="btn-close ms-2 mb-2" data-bs-dismiss="modal"></button>
+            </div>
 
-            <p>Please login or create account first.</p>
+            <div class="modal-body pt-2">
 
-            <div class="d-flex justify-content-center gap-3">
+                @if($errors->any())
+                    <div class="alert alert-danger alert-sm py-2 small">
+                        {{ $errors->first() }}
+                    </div>
+                @endif
 
-                <a href="/login" class="btn btn-success">
-                    Login
-                </a>
+                @if(session('error'))
+                    <div class="alert alert-danger alert-sm py-2 small">
+                        {{ session('error') }}
+                    </div>
+                @endif
 
-                <a href="/register" class="btn btn-outline-success">
-                    Sign Up
-                </a>
+                <div class="tab-content">
 
+                    {{-- ── LOGIN TAB ── --}}
+                    <div class="tab-pane fade {{ session('open_auth_modal') === 'register' ? '' : 'show active' }}" id="loginTab">
+                        <form method="POST" action="{{ url('/student/login') }}" class="d-grid gap-3 mt-2">
+                            @csrf
+                            <div>
+                                <label class="form-label fw-semibold small">CNIC</label>
+                                <input type="text" name="cnic"
+                                       class="form-control"
+                                       placeholder="xxxxx-xxxxxxx-x"
+                                       value="{{ old('cnic') }}"
+                                       required>
+                            </div>
+                            <div>
+                                <label class="form-label fw-semibold small">Password</label>
+                                <input type="password" name="password"
+                                       class="form-control"
+                                       placeholder="••••••••"
+                                       required>
+                            </div>
+                            <button type="submit" class="btn btn-success fw-semibold">
+                                Login
+                            </button>
+                            <p class="text-center small text-muted mb-0">
+                                No account?
+                                <a href="#" class="text-success fw-semibold text-decoration-none"
+                                   onclick="document.querySelector('[data-bs-target=\'#registerTab\']').click(); return false;">
+                                    Register here
+                                </a>
+                            </p>
+                        </form>
+                    </div>
+
+                    {{-- ── REGISTER TAB ── --}}
+                    <div class="tab-pane fade {{ session('open_auth_modal') === 'register' ? 'show active' : '' }}" id="registerTab">
+                        <form method="POST" action="{{ url('/student/register') }}" class="d-grid gap-3 mt-2">
+                            @csrf
+                            <div class="row g-2">
+                                <div class="col-12">
+                                    <label class="form-label fw-semibold small">Full Name</label>
+                                    <input type="text" name="name" class="form-control"
+                                           placeholder="Enter full name"
+                                           value="{{ old('name') }}" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold small">CNIC</label>
+                                    <input type="text" name="cnic" id="modalCnic" class="form-control"
+                                           placeholder="xxxxx-xxxxxxx-x"
+                                           value="{{ old('cnic') }}" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold small">Mobile</label>
+                                    <input type="text" name="mobile" id="modalMobile" class="form-control"
+                                           placeholder="03XXXXXXXXX"
+                                           value="{{ old('mobile') }}" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-semibold small">Age</label>
+                                    <input type="number" name="age" class="form-control"
+                                           placeholder="Age" min="1" max="120"
+                                           value="{{ old('age') }}" required>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label fw-semibold small">Address</label>
+                                    <textarea name="address" rows="2" class="form-control"
+                                              placeholder="Enter address" required>{{ old('address') }}</textarea>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold small">Password</label>
+                                    <input type="password" name="password" class="form-control"
+                                           placeholder="Min 8 characters" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold small">Confirm Password</label>
+                                    <input type="password" name="password_confirmation" class="form-control"
+                                           placeholder="Repeat password" required>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-success fw-semibold">
+                                Create Account
+                            </button>
+                            <p class="text-center small text-muted mb-0">
+                                Already registered?
+                                <a href="#" class="text-success fw-semibold text-decoration-none"
+                                   onclick="document.querySelector('[data-bs-target=\'#loginTab\']').click(); return false;">
+                                    Login here
+                                </a>
+                            </p>
+                        </form>
+                    </div>
+
+                </div>
             </div>
 
         </div>
