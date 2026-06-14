@@ -45,6 +45,15 @@
                             <label class="form-label fw-semibold small">Specialization</label>
                             <input type="text" name="specialization" class="form-control" value="{{ $faculty->specialization }}" required>
                         </div>
+                        <div class="col-12"><hr class="my-1"><small class="text-muted fw-semibold text-uppercase" style="font-size:.7rem;letter-spacing:.05em;">Change Password <span class="fw-normal">(leave blank to keep current)</span></small></div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold small">New Password</label>
+                            <input type="password" name="password" class="form-control form-control-sm" placeholder="Min 8 characters">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold small">Confirm Password</label>
+                            <input type="password" name="password_confirmation" class="form-control form-control-sm" placeholder="Repeat password">
+                        </div>
                         <div class="col-12">
                             <label class="form-label fw-semibold small">Profile Picture
                                 <span class="text-muted fw-normal">(leave blank to keep current)</span>

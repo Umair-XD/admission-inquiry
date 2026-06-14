@@ -67,21 +67,27 @@ class FacultyListRequest extends FormRequest
 
             $exp = '<span class="badge bg-light text-dark border">'.$f->experience.' yr'.($f->experience != 1 ? 's' : '').'</span>';
 
-            $deleteUrl = route('faculty.delete', $f->id);
+            $authUser  = auth()->user();
             $deptName  = $f->user?->department?->name ?? '<span class="text-muted small">None</span>';
             $deptId    = $f->user?->department_id ?? '';
 
-            $actions = '<button class="btn btn-sm btn-outline-success me-1"
+            $actions = '<button class="btn btn-sm btn-outline-secondary me-1" onclick="openViewFacultyModal('.$f->id.')" title="View"><i class="fa-solid fa-eye"></i></button>';
+            if ($authUser->can('faculty.edit')) {
+                $actions .= '<button class="btn btn-sm btn-outline-success me-1"
                     onclick="openAssignDept('.$f->id.',\''.$deptId.'\')" title="Assign Department">
                     <i class="fa-solid fa-building me-1"></i>'.$deptName.'</button>
                 <button class="btn btn-sm btn-outline-primary me-1"
                     onclick="openFacultyModal('.$f->id.')" title="Edit">
-                    <i class="fa-solid fa-pen"></i></button>
-                <form action="'.$deleteUrl.'" method="POST" style="display:inline"
+                    <i class="fa-solid fa-pen"></i></button>';
+            }
+            if ($authUser->can('faculty.delete')) {
+                $deleteUrl = route('faculty.delete', $f->id);
+                $actions .= '<form action="'.$deleteUrl.'" method="POST" style="display:inline"
                     onsubmit="confirmDelete(this,\'Delete this faculty member?\'); return false;">
                     '.csrf_field().'<input type="hidden" name="_method" value="DELETE">
                     <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
                 </form>';
+            }
 
             return [
                 'id'          => $f->id,

@@ -54,7 +54,7 @@ class InquiryListRequest extends FormRequest
         $col = in_array($orderCol, $allowed) ? $orderCol : 'id';
         $dir = $orderDir === 'asc' ? 'asc' : 'desc';
 
-        $records = $query->orderBy($col, $dir)->skip($start)->take($length)->get();
+        $records = $query->withCount('comments')->orderBy($col, $dir)->skip($start)->take($length)->get();
 
         $data = $records->map(function ($inquiry) {
             $matric = $inquiry->degrees->where('degree_id', 1)->first();
@@ -74,8 +74,15 @@ class InquiryListRequest extends FormRequest
             </div>';
 
             // Department / Course
-            $deptCourse = '<div class="small fw-medium">'.e($inquiry->department?->name ?? '—').'</div>
-                <div class="text-muted" style="font-size:.75rem;">'.e($inquiry->course?->name ?? '—').'</div>';
+            $dept   = $inquiry->department?->name;
+            $course = $inquiry->course?->name;
+            if ($dept && $course) {
+                $deptCourse = '<div class="small fw-medium">'.e($dept).' <span class="text-muted fw-normal">('.e($course).')</span></div>';
+            } elseif ($dept) {
+                $deptCourse = '<div class="small fw-medium">'.e($dept).'</div>';
+            } else {
+                $deptCourse = '<span class="text-muted small">Not set</span>';
+            }
 
             // Academic summary
             $academic = '<div style="font-size:.75rem;" class="d-flex flex-column gap-1">';
@@ -100,32 +107,46 @@ class InquiryListRequest extends FormRequest
             $academic .= '</div>';
 
             // Status
-            $colorMap = ['active' => 'success', 'inactive' => 'danger', 'archive' => 'warning'];
-            $labelMap = ['active' => 'In Process', 'inactive' => 'Admitted', 'archive' => 'Applicant'];
-            $c = $colorMap[$inquiry->status] ?? 'secondary';
-            $statusCell = '<span class="badge rounded-pill bg-'.$c.'-subtle text-'.$c.'">'.ucfirst($inquiry->status).'</span>
-                <br><span class="badge bg-info-subtle text-info rounded-pill mt-1" style="font-size:.7rem;">'.($labelMap[$inquiry->status] ?? '').'</span>';
+            $statusMap = [
+                'active'   => ['color' => 'warning',   'label' => 'In Process'],
+                'inactive' => ['color' => 'success',   'label' => 'Admitted'],
+                'archive'  => ['color' => 'secondary', 'label' => 'Archived'],
+            ];
+            $sm = $statusMap[$inquiry->status] ?? ['color' => 'secondary', 'label' => ucfirst($inquiry->status)];
+            $statusCell = '<span class="badge rounded-pill bg-'.$sm['color'].'-subtle text-'.$sm['color'].'" style="font-size:.75rem;">'.$sm['label'].'</span>';
 
             // Change status
-            $changeStatus = '<form action="'.route('inquiry.status.update', $inquiry->id).'" method="POST">
-                '.csrf_field().'<input type="hidden" name="_method" value="PUT">
-                <select name="status" class="form-select form-select-sm" onchange="this.form.submit()" style="min-width:110px">
-                    <option value="active" '.($inquiry->status === 'active' ? 'selected' : '').'>Active</option>
-                    <option value="inactive" '.($inquiry->status === 'inactive' ? 'selected' : '').'>Inactive</option>
-                    <option value="archive" '.($inquiry->status === 'archive' ? 'selected' : '').'>Archive</option>
-                </select></form>';
+            if (auth()->user()->can('inquiry.status')) {
+                $changeStatus = '<form class="s2-status-form" action="'.route('inquiry.status.update', $inquiry->id).'" method="POST">
+                    '.csrf_field().'<input type="hidden" name="_method" value="PUT">
+                    <select name="status" class="form-select form-select-sm s2-status" style="min-width:130px">
+                        <option value="active" '.($inquiry->status === 'active' ? 'selected' : '').'>In Process</option>
+                        <option value="inactive" '.($inquiry->status === 'inactive' ? 'selected' : '').'>Admitted</option>
+                        <option value="archive" '.($inquiry->status === 'archive' ? 'selected' : '').'>Archived</option>
+                    </select></form>';
+            } else {
+                $changeStatus = '<span class="text-muted small">—</span>';
+            }
 
             // Actions
-            $editUrl = route('inquiry.edit', $inquiry->id);
-            $deleteUrl = route('inquiry.delete', $inquiry->id);
-            $actions = '<button class="btn btn-sm btn-outline-primary me-1"
-                    onclick="openEditModal('.$inquiry->id.')" title="Edit">
-                    <i class="fa-solid fa-pen"></i></button>
-                <form action="'.$deleteUrl.'" method="POST" style="display:inline"
+            $authUser = auth()->user();
+            $commentsCount = $inquiry->comments_count ?? 0;
+            $commentsBtn = '<button class="btn btn-sm btn-outline-info me-1" onclick="openCommentsModal('.$inquiry->id.')" title="Comments">
+                <i class="fa-solid fa-comments"></i>'.($commentsCount > 0 ? ' <span class="badge bg-info rounded-pill" style="font-size:.65rem;">'.$commentsCount.'</span>' : '').'
+                </button>';
+            $actions = '<button class="btn btn-sm btn-outline-secondary me-1" onclick="openViewInquiryModal('.$inquiry->id.')" title="View"><i class="fa-solid fa-eye"></i></button>'
+                      .$commentsBtn;
+            if ($authUser->can('inquiry.edit')) {
+                $actions .= '<button class="btn btn-sm btn-outline-primary me-1" onclick="openEditModal('.$inquiry->id.')" title="Edit"><i class="fa-solid fa-pen"></i></button>';
+            }
+            if ($authUser->can('inquiry.delete')) {
+                $deleteUrl = route('inquiry.delete', $inquiry->id);
+                $actions .= '<form action="'.$deleteUrl.'" method="POST" style="display:inline"
                     onsubmit="confirmDelete(this,\'Delete this inquiry?\'); return false;">
                     '.csrf_field().'<input type="hidden" name="_method" value="DELETE">
                     <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
                 </form>';
+            }
 
             return [
                 'id' => $inquiry->id,

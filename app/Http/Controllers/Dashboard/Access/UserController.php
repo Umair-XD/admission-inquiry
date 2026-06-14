@@ -26,6 +26,12 @@ class UserController extends Controller
         return view('dashboard.access.users.index', compact('roles', 'departments'));
     }
 
+    public function show(User $user)
+    {
+        $user->load(['roles', 'department']);
+        return view('dashboard.access.users.view_modal', compact('user'));
+    }
+
     public function edit(User $user)
     {
         $departments = Department::orderBy('name')->get();

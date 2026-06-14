@@ -78,6 +78,7 @@
 
             {{-- Inquiries --}}
             @php $inquiryOpen = request()->routeIs('inquires') || request()->routeIs('inquiryform'); @endphp
+            @can('inquiry.view')
             <div class="accordion-item">
                 <h2 class="accordion-header">
                     <button class="accordion-button {{ $inquiryOpen ? '' : 'collapsed' }}" type="button"
@@ -92,10 +93,12 @@
                      data-bs-parent="#menuAccordion">
                     <div class="accordion-body p-0">
                         <div class="list-group list-group-flush">
+                            @can('inquiry.create')
                             <a href="{{ route('inquiryform') }}"
                                class="list-group-item list-group-item-action ps-4 {{ request()->routeIs('inquiryform') ? 'active' : '' }}">
                                 <i class="fa-solid fa-plus me-2"></i> Add Inquiry
                             </a>
+                            @endcan
                             <a href="{{ route('inquires') }}"
                                class="list-group-item list-group-item-action ps-4 {{ request()->routeIs('inquires') ? 'active' : '' }}">
                                 <i class="fa-solid fa-list me-2"></i> All Inquiries
@@ -104,9 +107,11 @@
                     </div>
                 </div>
             </div>
+            @endcan
 
             {{-- Academic --}}
             @php $academicOpen = request()->routeIs('departments.*') || request()->routeIs('faculty*') || request()->routeIs('admin.students'); @endphp
+            @canany(['department.view', 'faculty.view', 'student.view'])
             <div class="accordion-item">
                 <h2 class="accordion-header">
                     <button class="accordion-button {{ $academicOpen ? '' : 'collapsed' }}" type="button"
@@ -121,25 +126,33 @@
                      data-bs-parent="#menuAccordion">
                     <div class="accordion-body p-0">
                         <div class="list-group list-group-flush">
+                            @can('department.view')
                             <a href="{{ route('departments.index') }}"
                                class="list-group-item list-group-item-action ps-4 {{ request()->routeIs('departments.*') ? 'active' : '' }}">
                                 <i class="fa-solid fa-building-columns me-2"></i> Departments
                             </a>
+                            @endcan
+                            @can('faculty.view')
                             <a href="{{ route('faculty') }}"
                                class="list-group-item list-group-item-action ps-4 {{ request()->routeIs('faculty*') ? 'active' : '' }}">
                                 <i class="fa-solid fa-chalkboard-user me-2"></i> Faculty
                             </a>
+                            @endcan
+                            @can('student.view')
                             <a href="{{ route('admin.students') }}"
                                class="list-group-item list-group-item-action ps-4 {{ request()->routeIs('admin.students') ? 'active' : '' }}">
                                 <i class="fa-solid fa-user-graduate me-2"></i> Students
                             </a>
+                            @endcan
                         </div>
                     </div>
                 </div>
             </div>
+            @endcanany
 
             {{-- Access Control --}}
             @php $accessOpen = request()->routeIs('access.users.*') || request()->routeIs('access.roles.*'); @endphp
+            @canany(['user.view', 'role.view'])
             <div class="accordion-item">
                 <h2 class="accordion-header">
                     <button class="accordion-button {{ $accessOpen ? '' : 'collapsed' }}" type="button"
@@ -154,18 +167,23 @@
                      data-bs-parent="#menuAccordion">
                     <div class="accordion-body p-0">
                         <div class="list-group list-group-flush">
+                            @can('user.view')
                             <a href="{{ route('access.users.index') }}"
                                class="list-group-item list-group-item-action ps-4 {{ request()->routeIs('access.users.*') ? 'active' : '' }}">
                                 <i class="fa-solid fa-users me-2"></i> Users
                             </a>
+                            @endcan
+                            @can('role.view')
                             <a href="{{ route('access.roles.index') }}"
                                class="list-group-item list-group-item-action ps-4 {{ request()->routeIs('access.roles.*') ? 'active' : '' }}">
                                 <i class="fa-solid fa-key me-2"></i> Roles
                             </a>
+                            @endcan
                         </div>
                     </div>
                 </div>
             </div>
+            @endcanany
 
         </div>{{-- /accordion --}}
 

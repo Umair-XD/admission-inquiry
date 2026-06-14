@@ -9,9 +9,11 @@
         <h4 class="fw-bold mb-0 text-dark"><i class="fa-solid fa-file-lines me-2 text-primary"></i>Inquiries</h4>
         <small class="text-muted">Manage all admission inquiries</small>
     </div>
+    @can('inquiry.create')
     <a href="{{ route('inquiryform') }}" class="btn btn-primary">
         <i class="fa-solid fa-plus me-1"></i> Add Inquiry
     </a>
+    @endcan
 </div>
 
 <div class="card">
@@ -20,17 +22,17 @@
         <ul class="nav nav-tabs mb-3" id="inquiryTabs">
             <li class="nav-item">
                 <button class="nav-link active" data-tab="active" onclick="switchTab(this, 'active')">
-                    Active
+                    <i class="fa-solid fa-circle-dot me-1 text-warning"></i> In Process
                 </button>
             </li>
             <li class="nav-item">
                 <button class="nav-link" data-tab="inactive" onclick="switchTab(this, 'inactive')">
-                    Inactive
+                    <i class="fa-solid fa-circle-check me-1 text-success"></i> Admitted
                 </button>
             </li>
             <li class="nav-item">
                 <button class="nav-link" data-tab="archive" onclick="switchTab(this, 'archive')">
-                    Archive
+                    <i class="fa-solid fa-box-archive me-1 text-secondary"></i> Archived
                 </button>
             </li>
         </ul>
@@ -55,8 +57,10 @@
     </div>
 </div>
 
-{{-- Edit Modals — rendered once, filled via JS --}}
+{{-- Modal containers --}}
+<div id="viewInquiryModalContainer"></div>
 <div id="editModalContainer"></div>
+<div id="commentsModalContainer"></div>
 
 @endsection
 
@@ -99,6 +103,18 @@ function initTable(status) {
             processing: '<div class="text-center py-3"><i class="fa-solid fa-spinner fa-spin me-2"></i>Loading...</div>',
             emptyTable: 'No inquiries found',
             zeroRecords: 'No matching inquiries'
+        },
+        drawCallback: function () {
+            // Re-init Select2 on status dropdowns after every DataTable draw
+            $('.s2-status').each(function () {
+                if ($(this).data('select2')) $(this).select2('destroy');
+                $(this).select2({
+                    theme: 'bootstrap-5',
+                    width: '100%',
+                    minimumResultsForSearch: Infinity,
+                    appendTo: 'body'
+                });
+            });
         }
     });
 }
@@ -114,13 +130,32 @@ $(document).ready(function () {
     initTable('active');
 });
 
+function openViewInquiryModal(id) {
+    $.get('{{ url("admin/inquiry") }}/' + id + '/show', function (html) {
+        $('#viewInquiryModalContainer').html(html);
+        $('#viewInquiryModal').modal('show');
+    });
+}
+
 function openEditModal(id) {
-    $.get('{{ url("admin/inquiry") }}/' + id + '/edit', function(html) {
+    $.get('{{ url("admin/inquiry") }}/' + id + '/edit', function (html) {
         $('#editModalContainer').html(html);
         $('#editInquiryModal').modal('show');
-    }).fail(function() {
+    }).fail(function () {
         alert('Could not load inquiry. Please try again.');
     });
 }
+
+function openCommentsModal(id) {
+    $.get('{{ url("admin/inquiry") }}/' + id + '/comments', function (html) {
+        $('#commentsModalContainer').html(html);
+        $('#commentsModal').modal('show');
+    });
+}
+
+// Status dropdown change → submit its form
+$(document).on('change', '.s2-status', function () {
+    $(this).closest('form').submit();
+});
 </script>
 @endpush

@@ -9,9 +9,11 @@
         <h4 class="fw-bold mb-0 text-dark"><i class="fa-solid fa-chalkboard-user me-2 text-primary"></i>Faculty</h4>
         <small class="text-muted">All registered faculty members</small>
     </div>
+    @can('faculty.create')
     <a href="{{ route('facultyform') }}" class="btn btn-primary">
         <i class="fa-solid fa-plus me-1"></i> Add Faculty
     </a>
+    @endcan
 </div>
 
 <div class="card">
@@ -34,6 +36,7 @@
     </div>
 </div>
 
+<div id="viewFacultyModalContainer"></div>
 <div id="editFacultyModalContainer"></div>
 
 {{-- Assign Department Modal --}}
@@ -48,8 +51,8 @@
                 @csrf
                 <div class="modal-body">
                     <label class="form-label fw-semibold">Department</label>
-                    <select name="department_id" id="assignDeptSelect" class="form-select select2">
-                        <option value="">— None —</option>
+                    <select name="department_id" id="assignDeptSelect" class="form-select">
+                        <option value="">None</option>
                         @foreach($departments as $dept)
                             <option value="{{ $dept->id }}">{{ $dept->name }}</option>
                         @endforeach
@@ -98,6 +101,13 @@ $(document).ready(function () {
     });
 });
 
+function openViewFacultyModal(id) {
+    $.get('{{ url("admin/faculty") }}/' + id + '/show', function (html) {
+        $('#viewFacultyModalContainer').html(html);
+        $('#viewFacultyModal').modal('show');
+    });
+}
+
 function openFacultyModal(id) {
     $.get('{{ url("admin/faculty") }}/' + id + '/edit', function (html) {
         $('#editFacultyModalContainer').html(html);
@@ -108,8 +118,16 @@ function openFacultyModal(id) {
 function openAssignDept(facultyId, currentDeptId) {
     var baseUrl = '{{ url("admin/faculty") }}/' + facultyId + '/assign-department';
     $('#assignDeptForm').attr('action', baseUrl);
-    var $select = $('#assignDeptSelect');
-    $select.val(currentDeptId || '').trigger('change');
+
+    if (!$('#assignDeptSelect').data('select2')) {
+        $('#assignDeptSelect').select2({
+            theme: 'bootstrap-5',
+            width: '100%',
+            dropdownParent: $('#assignDeptModal')
+        });
+    }
+
+    $('#assignDeptSelect').val(currentDeptId || '').trigger('change');
     $('#assignDeptModal').modal('show');
 }
 </script>

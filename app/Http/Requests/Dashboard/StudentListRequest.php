@@ -74,17 +74,21 @@ class StudentListRequest extends FormRequest
             }
             $academic .= '</div>';
 
-            $editUrl   = route('student.edit', $s->id);
-            $deleteUrl = route('student.delete', $s->id);
-
-            $actions = '<button class="btn btn-sm btn-outline-primary me-1"
+            $authUser = auth()->user();
+            $actions  = '<button class="btn btn-sm btn-outline-secondary me-1" onclick="openViewStudentModal('.$s->id.')" title="View"><i class="fa-solid fa-eye"></i></button>';
+            if ($authUser->can('student.edit')) {
+                $actions .= '<button class="btn btn-sm btn-outline-primary me-1"
                     onclick="openStudentModal('.$s->id.')" title="Edit">
-                    <i class="fa-solid fa-pen"></i></button>
-                <form action="'.$deleteUrl.'" method="POST" style="display:inline"
+                    <i class="fa-solid fa-pen"></i></button>';
+            }
+            if ($authUser->can('student.delete')) {
+                $deleteUrl = route('student.delete', $s->id);
+                $actions .= '<form action="'.$deleteUrl.'" method="POST" style="display:inline"
                     onsubmit="confirmDelete(this,\'Delete this student?\'); return false;">
                     '.csrf_field().'<input type="hidden" name="_method" value="DELETE">
                     <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
                 </form>';
+            }
 
             return [
                 'id'      => $s->id,

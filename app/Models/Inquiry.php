@@ -32,4 +32,9 @@ class Inquiry extends Model
     {
         return $this->hasMany(InquiryDegree::class);
     }
+
+    public function comments()
+    {
+        return $this->hasMany(InquiryComment::class)->latest();
+    }
 }

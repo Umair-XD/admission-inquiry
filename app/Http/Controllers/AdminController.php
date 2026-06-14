@@ -11,7 +11,8 @@ class AdminController extends Controller
     public function loginForm()
     {
         // Already logged in as admin? Go straight to dashboard
-        if (Auth::check() && Auth::user()->role === RoleEnum::SUPER_ADMIN) {
+        $allowed = [RoleEnum::SUPER_ADMIN, RoleEnum::ADMIN, RoleEnum::STAFF];
+        if (Auth::check() && in_array(Auth::user()->role, $allowed)) {
             return redirect()->route('admin.dashboard');
         }
 
@@ -26,10 +27,11 @@ class AdminController extends Controller
         ]);
 
         if (Auth::attempt($credentials)) {
-            if (Auth::user()->role !== RoleEnum::SUPER_ADMIN) {
+            $allowed = [RoleEnum::SUPER_ADMIN, RoleEnum::ADMIN, RoleEnum::STAFF];
+            if (! in_array(Auth::user()->role, $allowed)) {
                 Auth::logout();
 
-                return back()->with('error', 'Access denied. Admins only.');
+                return back()->with('error', 'Access denied. Unauthorized role.');
             }
 
             $request->session()->regenerate();

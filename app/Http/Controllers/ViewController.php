@@ -286,12 +286,12 @@ class ViewController extends Controller
         // dd($request->all());
         // ✅ VALIDATION
         $request->validate([
-            'name' => 'required',
-            'age' => 'required|numeric',
-            'phone' => 'required',
-            'cnic' => 'required',
+            'name'          => 'required',
+            'age'           => 'required|numeric',
+            'phone'         => 'required',
+            'cnic'          => 'required',
             'department_id' => 'required',
-            'course_id' => 'required',
+            'course_id'     => 'nullable|exists:courses,id',
         ]);
 
         // ✅ 1. SAVE MAIN INQUIRY
@@ -349,9 +349,9 @@ class ViewController extends Controller
 
     public function logout()
     {
-        // Clear only student session data
         Session::forget('student_id');
         Session::forget('student_name');
+        Session::forget('student_cnic');
 
         // Optional: clear everything
         // Session::flush();

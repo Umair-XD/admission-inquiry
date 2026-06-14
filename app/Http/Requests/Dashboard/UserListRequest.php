@@ -72,6 +72,7 @@ class UserListRequest extends FormRequest
                 $roleBadges = '<span class="text-muted small">—</span>';
             }
 
+            $viewBtn = '<button class="btn btn-sm btn-outline-secondary me-1" onclick="openViewUserModal('.$user->id.')" title="View"><i class="fa-solid fa-eye"></i></button>';
             $editBtn = '<button class="btn btn-sm btn-outline-primary me-1" onclick="openUserModal('.$user->id.')" title="Edit"><i class="fa-solid fa-pen"></i></button>';
 
             $deleteBtn = '';
@@ -87,7 +88,7 @@ class UserListRequest extends FormRequest
                 'email' => '<span class="text-muted small">'.e($user->email).'</span>',
                 'role' => $roleBadges,
                 'created' => $user->created_at->format('d M Y'),
-                'actions' => $editBtn.$deleteBtn,
+                'actions' => $viewBtn.$editBtn.$deleteBtn,
             ];
         });
 

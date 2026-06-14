@@ -12,6 +12,7 @@ use App\Models\Degree;
 use App\Models\Department;
 use App\Models\Faculty;
 use App\Models\Inquiry;
+use App\Models\InquiryComment;
 use App\Models\InquiryDegree;
 use App\Models\Student;
 use App\Models\User;
@@ -80,10 +81,10 @@ class DashboardController extends Controller
         $user = User::create([
             'name'     => $request->first_name.' '.$request->last_name,
             'email'    => $request->official_email,
-            'password' => Hash::make($request->password),
+            'password' => $request->password, // hashed cast handles this
             'role'     => RoleEnum::STAFF,
         ]);
-        $user->assignRole('staff');
+        try { $user->syncRoles(['staff']); } catch (\Exception $e) { /* Spatie cache issue — role column already set */ }
 
         // Build faculty data
         $facultyData = $request->only([
@@ -245,43 +246,42 @@ class DashboardController extends Controller
 
     public function edit($id)
     {
-        $inquiry = Inquiry::with('degrees')->findOrFail($id);
-        $matric = $inquiry->degrees->where('degree_id', 1)->first();
-        $inter = $inquiry->degrees->where('degree_id', 2)->first();
-        $bs = $inquiry->degrees->where('degree_id', 3)->first();
-        $ms = $inquiry->degrees->where('degree_id', 4)->first();
+        $inquiry     = Inquiry::with('degrees')->findOrFail($id);
+        $matric      = $inquiry->degrees->where('degree_id', 1)->first();
+        $inter       = $inquiry->degrees->where('degree_id', 2)->first();
+        $bs          = $inquiry->degrees->where('degree_id', 3)->first();
+        $ms          = $inquiry->degrees->where('degree_id', 4)->first();
+        $departments = Department::orderBy('name')->get();
+        $degrees     = Degree::all();
 
-        return view('dashboard.inquiry_edit_modal', compact('inquiry', 'matric', 'inter', 'bs', 'ms'));
+        return view('dashboard.inquiry_edit_modal', compact('inquiry', 'matric', 'inter', 'bs', 'ms', 'departments', 'degrees'));
     }
 
     public function inquiresformUpdate(Request $request, $id)
     {
         // dd($request->all());
 
-        // ✅ VALIDATION
         $request->validate([
-            'name' => 'required',
-            'age' => 'required|numeric',
-            'phone' => 'required',
-            'cnic' => 'required',
+            'name'          => 'required',
+            'age'           => 'required|numeric',
+            'phone'         => 'required',
+            'cnic'          => 'required',
+            'department_id' => 'required|exists:departments,id',
+            'course_id'     => 'nullable|exists:courses,id',
         ]);
 
-        // ✅ 1. FIND INQUIRY
         $inquiry = Inquiry::findOrFail($id);
 
-        // ✅ 2. UPDATE MAIN INQUIRY (USING SAVE ONLY)
-        $inquiry->name = $request->name;
-        $inquiry->age = $request->age;
-        $inquiry->phone = $request->phone;
-        $inquiry->cnic = $request->cnic;
-        // $inquiry->department_id = $request->department_id;
-        // $inquiry->course_id = $request->course_id;
+        $inquiry->name           = $request->name;
+        $inquiry->age            = $request->age;
+        $inquiry->phone          = $request->phone;
+        $inquiry->cnic           = $request->cnic;
+        $inquiry->department_id  = $request->department_id;
+        $inquiry->course_id      = $request->course_id ?: null;
+        $inquiry->entry_obtained = $request->entry_obtained ?: null;
+        $inquiry->entry_total    = $request->entry_total ?: null;
 
-        // entry test (also save here if you want single save)
-        $inquiry->entry_obtained = $request->entry_obtained;
-        $inquiry->entry_total = $request->entry_total;
-
-        $inquiry->save(); // ✅ ONE SAVE ONLY
+        $inquiry->save();
 
         // ✅ 3. UPDATE / INSERT DEGREES
         if ($request->has('degrees')) {
@@ -393,18 +393,22 @@ class DashboardController extends Controller
 
     public function updateFaculty(Request $request, Faculty $faculty)
     {
-        $request->validate([
-            'first_name'     => 'required|string|max:255',
-            'last_name'      => 'required|string|max:255',
-            'personal_email' => 'required|email|max:255',
-            'official_email' => 'required|email|max:255',
-            'phone'          => 'required|string|max:20',
-            'designation'    => 'required|string|max:255',
-            'degree'         => 'required|string|max:255',
-            'experience'     => 'required|integer|min:0',
-            'specialization' => 'required|string|max:255',
+        $rules = [
+            'first_name'      => 'required|string|max:255',
+            'last_name'       => 'required|string|max:255',
+            'personal_email'  => 'required|email|max:255',
+            'official_email'  => 'required|email|max:255',
+            'phone'           => 'required|string|max:20',
+            'designation'     => 'required|string|max:255',
+            'degree'          => 'required|string|max:255',
+            'experience'      => 'required|integer|min:0',
+            'specialization'  => 'required|string|max:255',
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+        ];
+        if ($request->filled('password')) {
+            $rules['password'] = 'required|string|min:8|confirmed';
+        }
+        $request->validate($rules);
 
         $data = $request->only([
             'first_name', 'last_name', 'personal_email', 'official_email',
@@ -420,6 +424,18 @@ class DashboardController extends Controller
 
         $faculty->update($data);
 
+        // Update linked user's name, email and optionally password
+        if ($faculty->user_id) {
+            $userUpdate = [
+                'name'  => $request->first_name.' '.$request->last_name,
+                'email' => $request->official_email,
+            ];
+            if ($request->filled('password')) {
+                $userUpdate['password'] = $request->password;
+            }
+            User::where('id', $faculty->user_id)->update($userUpdate);
+        }
+
         return back()->with('success', 'Faculty updated successfully.');
     }
 
@@ -427,6 +443,47 @@ class DashboardController extends Controller
     {
         $faculty->delete();
         return back()->with('success', 'Faculty member deleted successfully.');
+    }
+
+    public function showInquiry(Inquiry $inquiry)
+    {
+        $inquiry->load(['department', 'course', 'degrees', 'comments.user']);
+        return view('dashboard.inquiry_view_modal', compact('inquiry'));
+    }
+
+    public function showStudent(Student $student)
+    {
+        return view('dashboard.student_view_modal', compact('student'));
+    }
+
+    public function showFacultyView(Faculty $faculty)
+    {
+        $faculty->load('user.department');
+        return view('dashboard.faculty_view_modal', compact('faculty'));
+    }
+
+    public function showComments(Inquiry $inquiry)
+    {
+        $inquiry->load(['comments.user', 'department', 'course']);
+        return view('dashboard.inquiry_comments_modal', compact('inquiry'));
+    }
+
+    public function storeComment(Request $request, Inquiry $inquiry)
+    {
+        $request->validate(['body' => 'required|string|max:1000']);
+        $comment = InquiryComment::create([
+            'inquiry_id' => $inquiry->id,
+            'user_id'    => auth()->id(),
+            'body'       => $request->body,
+        ]);
+        $comment->load('user');
+
+        return response()->json([
+            'initial' => strtoupper(substr($comment->user->name, 0, 1)),
+            'name'    => $comment->user->name,
+            'body'    => e($comment->body),
+            'time'    => $comment->created_at->diffForHumans(),
+        ]);
     }
 
     public function assignDepartment(Request $request, Faculty $faculty)

@@ -31,6 +31,7 @@
     </div>
 </div>
 
+<div id="viewStudentModalContainer"></div>
 <div id="editStudentModalContainer"></div>
 
 @endsection
@@ -63,6 +64,13 @@ $(document).ready(function () {
         }
     });
 });
+
+function openViewStudentModal(id) {
+    $.get('{{ url("admin/students") }}/' + id + '/show', function (html) {
+        $('#viewStudentModalContainer').html(html);
+        $('#viewStudentModal').modal('show');
+    });
+}
 
 function openStudentModal(id) {
     $.get('{{ url("admin/students") }}/' + id + '/edit', function (html) {

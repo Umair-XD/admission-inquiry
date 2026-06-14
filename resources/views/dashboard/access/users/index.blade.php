@@ -33,7 +33,8 @@
     </div>
 </div>
 
-{{-- Edit modal container --}}
+{{-- Modal containers --}}
+<div id="viewUserModalContainer"></div>
 <div id="editUserModalContainer"></div>
 
 {{-- Add User Modal --}}
@@ -132,6 +133,13 @@ $(document).ready(function () {
 document.getElementById('addUserRole').addEventListener('change', function () {
     document.getElementById('addUserDeptWrap').style.display = this.value === 'staff' ? '' : 'none';
 });
+
+function openViewUserModal(id) {
+    $.get('{{ url("admin/access/users") }}/' + id + '/show', function (html) {
+        $('#viewUserModalContainer').html(html);
+        $('#viewUserModal').modal('show');
+    });
+}
 
 function openUserModal(id) {
     $.get('{{ url("admin/access/users") }}/' + id + '/edit', function(html) {

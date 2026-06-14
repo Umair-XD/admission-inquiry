@@ -95,11 +95,11 @@
                 <div class="row g-2">
                     <div class="col-md-3 col-6">
                         <label class="form-label small">Obtained</label>
-                        <input type="number" name="degrees[1][obtained]" class="form-control form-control-sm" placeholder="e.g. 850">
+                        <input type="number" name="degrees[1][obtained]" class="form-control form-control-sm" step="0.01" min="0" placeholder="e.g. 850">
                     </div>
                     <div class="col-md-3 col-6">
                         <label class="form-label small">Total</label>
-                        <input type="number" name="degrees[1][total]" class="form-control form-control-sm" placeholder="e.g. 1100">
+                        <input type="number" name="degrees[1][total]" class="form-control form-control-sm" step="0.01" min="0" placeholder="e.g. 1100">
                     </div>
                 </div>
             </div>
@@ -113,20 +113,20 @@
                     <div class="col-12"><small class="text-muted fw-semibold">Part 1</small></div>
                     <div class="col-md-3 col-6">
                         <label class="form-label small">Obtained</label>
-                        <input type="number" name="degrees[2][part1_obtained]" class="form-control form-control-sm" placeholder="Obtained">
+                        <input type="number" name="degrees[2][part1_obtained]" class="form-control form-control-sm" step="0.01" min="0" placeholder="Obtained">
                     </div>
                     <div class="col-md-3 col-6">
                         <label class="form-label small">Total</label>
-                        <input type="number" name="degrees[2][part1_total]" class="form-control form-control-sm" placeholder="Total">
+                        <input type="number" name="degrees[2][part1_total]" class="form-control form-control-sm" step="0.01" min="0" placeholder="Total">
                     </div>
                     <div class="col-12"><small class="text-muted fw-semibold">Part 2</small></div>
                     <div class="col-md-3 col-6">
                         <label class="form-label small">Obtained</label>
-                        <input type="number" name="degrees[2][part2_obtained]" class="form-control form-control-sm" placeholder="Obtained">
+                        <input type="number" name="degrees[2][part2_obtained]" class="form-control form-control-sm" step="0.01" min="0" placeholder="Obtained">
                     </div>
                     <div class="col-md-3 col-6">
                         <label class="form-label small">Total</label>
-                        <input type="number" name="degrees[2][part2_total]" class="form-control form-control-sm" placeholder="Total">
+                        <input type="number" name="degrees[2][part2_total]" class="form-control form-control-sm" step="0.01" min="0" placeholder="Total">
                     </div>
                 </div>
             </div>
@@ -139,11 +139,11 @@
                 <div class="row g-2">
                     <div class="col-md-3 col-6">
                         <label class="form-label small">Obtained</label>
-                        <input type="number" name="degrees[3][obtained]" class="form-control form-control-sm" placeholder="e.g. 3.5 GPA">
+                        <input type="number" name="degrees[3][obtained]" class="form-control form-control-sm" step="0.01" min="0" placeholder="e.g. 3.50">
                     </div>
                     <div class="col-md-3 col-6">
                         <label class="form-label small">Total</label>
-                        <input type="number" name="degrees[3][total]" class="form-control form-control-sm" placeholder="e.g. 4.0">
+                        <input type="number" name="degrees[3][total]" class="form-control form-control-sm" step="0.01" min="0" placeholder="e.g. 4.00">
                     </div>
                 </div>
             </div>
@@ -156,11 +156,11 @@
                 <div class="row g-2">
                     <div class="col-md-3 col-6">
                         <label class="form-label small">Obtained</label>
-                        <input type="number" name="degrees[4][obtained]" class="form-control form-control-sm" placeholder="e.g. 3.7 GPA">
+                        <input type="number" name="degrees[4][obtained]" class="form-control form-control-sm" step="0.01" min="0" placeholder="e.g. 3.70">
                     </div>
                     <div class="col-md-3 col-6">
                         <label class="form-label small">Total</label>
-                        <input type="number" name="degrees[4][total]" class="form-control form-control-sm" placeholder="e.g. 4.0">
+                        <input type="number" name="degrees[4][total]" class="form-control form-control-sm" step="0.01" min="0" placeholder="e.g. 4.00">
                     </div>
                 </div>
             </div>
@@ -178,11 +178,11 @@
             <div class="row g-2">
                 <div class="col-md-3 col-6">
                     <label class="form-label small">Obtained</label>
-                    <input type="number" id="entryObt" name="entry_obtained" class="form-control form-control-sm" placeholder="Obtained" disabled>
+                    <input type="number" id="entryObt" name="entry_obtained" class="form-control form-control-sm" step="0.01" min="0" placeholder="Obtained" disabled>
                 </div>
                 <div class="col-md-3 col-6">
                     <label class="form-label small">Total</label>
-                    <input type="number" id="entryTotal" name="entry_total" class="form-control form-control-sm" placeholder="Total" disabled>
+                    <input type="number" id="entryTotal" name="entry_total" class="form-control form-control-sm" step="0.01" min="0" placeholder="Total" disabled>
                 </div>
             </div>
         </div>

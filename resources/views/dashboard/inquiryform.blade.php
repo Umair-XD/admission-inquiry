@@ -102,11 +102,11 @@
                 <div class="row g-2">
                     <div class="col-md-3 col-6">
                         <label class="form-label small">Obtained</label>
-                        <input type="number" name="degrees[1][obtained]" class="form-control form-control-sm" placeholder="e.g. 850">
+                        <input type="number" name="degrees[1][obtained]" class="form-control form-control-sm" step="0.01" min="0" placeholder="e.g. 850">
                     </div>
                     <div class="col-md-3 col-6">
                         <label class="form-label small">Total</label>
-                        <input type="number" name="degrees[1][total]" class="form-control form-control-sm" placeholder="e.g. 1100">
+                        <input type="number" name="degrees[1][total]" class="form-control form-control-sm" step="0.01" min="0" placeholder="e.g. 1100">
                     </div>
                 </div>
             </div>
@@ -118,20 +118,20 @@
                     <div class="col-12"><small class="text-muted fw-semibold">Part 1</small></div>
                     <div class="col-md-3 col-6">
                         <label class="form-label small">Obtained</label>
-                        <input type="number" name="degrees[2][part1_obtained]" class="form-control form-control-sm" placeholder="Obtained">
+                        <input type="number" name="degrees[2][part1_obtained]" class="form-control form-control-sm" step="0.01" min="0" placeholder="Obtained">
                     </div>
                     <div class="col-md-3 col-6">
                         <label class="form-label small">Total</label>
-                        <input type="number" name="degrees[2][part1_total]" class="form-control form-control-sm" placeholder="Total">
+                        <input type="number" name="degrees[2][part1_total]" class="form-control form-control-sm" step="0.01" min="0" placeholder="Total">
                     </div>
                     <div class="col-12"><small class="text-muted fw-semibold">Part 2</small></div>
                     <div class="col-md-3 col-6">
                         <label class="form-label small">Obtained</label>
-                        <input type="number" name="degrees[2][part2_obtained]" class="form-control form-control-sm" placeholder="Obtained">
+                        <input type="number" name="degrees[2][part2_obtained]" class="form-control form-control-sm" step="0.01" min="0" placeholder="Obtained">
                     </div>
                     <div class="col-md-3 col-6">
                         <label class="form-label small">Total</label>
-                        <input type="number" name="degrees[2][part2_total]" class="form-control form-control-sm" placeholder="Total">
+                        <input type="number" name="degrees[2][part2_total]" class="form-control form-control-sm" step="0.01" min="0" placeholder="Total">
                     </div>
                 </div>
             </div>
@@ -142,11 +142,11 @@
                 <div class="row g-2">
                     <div class="col-md-3 col-6">
                         <label class="form-label small">Obtained</label>
-                        <input type="number" name="degrees[3][obtained]" class="form-control form-control-sm" placeholder="e.g. 3.5 GPA">
+                        <input type="number" name="degrees[3][obtained]" class="form-control form-control-sm" step="0.01" min="0" placeholder="e.g. 3.50">
                     </div>
                     <div class="col-md-3 col-6">
                         <label class="form-label small">Total</label>
-                        <input type="number" name="degrees[3][total]" class="form-control form-control-sm" placeholder="e.g. 4.0">
+                        <input type="number" name="degrees[3][total]" class="form-control form-control-sm" step="0.01" min="0" placeholder="e.g. 4.00">
                     </div>
                 </div>
             </div>
@@ -157,11 +157,11 @@
                 <div class="row g-2">
                     <div class="col-md-3 col-6">
                         <label class="form-label small">Obtained</label>
-                        <input type="number" name="degrees[4][obtained]" class="form-control form-control-sm" placeholder="e.g. 3.7 GPA">
+                        <input type="number" name="degrees[4][obtained]" class="form-control form-control-sm" step="0.01" min="0" placeholder="e.g. 3.70">
                     </div>
                     <div class="col-md-3 col-6">
                         <label class="form-label small">Total</label>
-                        <input type="number" name="degrees[4][total]" class="form-control form-control-sm" placeholder="e.g. 4.0">
+                        <input type="number" name="degrees[4][total]" class="form-control form-control-sm" step="0.01" min="0" placeholder="e.g. 4.00">
                     </div>
                 </div>
             </div>
@@ -179,11 +179,11 @@
             <div class="row g-2">
                 <div class="col-md-3 col-6">
                     <label class="form-label small">Obtained</label>
-                    <input type="number" id="entryObt" name="entry_obtained" class="form-control form-control-sm" placeholder="Obtained" disabled>
+                    <input type="number" id="entryObt" name="entry_obtained" class="form-control form-control-sm" step="0.01" min="0" placeholder="Obtained" disabled>
                 </div>
                 <div class="col-md-3 col-6">
                     <label class="form-label small">Total</label>
-                    <input type="number" id="entryTotal" name="entry_total" class="form-control form-control-sm" placeholder="Total" disabled>
+                    <input type="number" id="entryTotal" name="entry_total" class="form-control form-control-sm" step="0.01" min="0" placeholder="Total" disabled>
                 </div>
             </div>
         </div>
@@ -205,53 +205,50 @@
 
 @push('scripts')
 <script>
-document.addEventListener('DOMContentLoaded', function () {
+$(function () {
 
-    // Degree selector
-    document.getElementById('degree').addEventListener('change', function () {
-        document.querySelectorAll('.degree-box').forEach(b => b.classList.add('d-none'));
-        const box = document.getElementById('degree-' + this.value);
-        if (box) box.classList.remove('d-none');
+    // Degree selector — jQuery required for Select2 change events
+    $('#degree').on('change', function () {
+        $('.degree-box').addClass('d-none');
+        $('#degree-' + this.value).removeClass('d-none');
     });
 
     // Course loader
-    document.getElementById('department').addEventListener('change', function () {
-        var courseSelect = $('#course');
-        courseSelect.empty().append('<option>Loading...</option>').trigger('change');
-        fetch("{{ route('courses.by.department', ':id') }}".replace(':id', this.value))
-            .then(r => r.json())
-            .then(data => {
-                courseSelect.empty();
-                if (!data.length) {
-                    courseSelect.append('<option value="" disabled selected>No courses available</option>');
-                } else {
-                    courseSelect.append('<option value="" disabled selected>Select Course</option>');
-                    data.forEach(c => courseSelect.append(new Option(c.name, c.id)));
-                }
-                courseSelect.trigger('change'); // refresh Select2
-            });
+    $('#department').on('change', function () {
+        var $course = $('#course');
+        $course.empty().append('<option>Loading...</option>').trigger('change');
+        $.getJSON("{{ route('courses.by.department', ':id') }}".replace(':id', this.value), function (data) {
+            $course.empty();
+            if (!data.length) {
+                $course.append('<option value="">No courses available</option>');
+            } else {
+                $course.append('<option value="">Select Course</option>');
+                $.each(data, function (i, c) { $course.append(new Option(c.name, c.id)); });
+            }
+            $course.trigger('change');
+        });
     });
 
     // Entry test toggle
-    document.getElementById('entryCheck').addEventListener('change', function () {
-        document.getElementById('entryObt').disabled   = !this.checked;
-        document.getElementById('entryTotal').disabled = !this.checked;
+    $('#entryCheck').on('change', function () {
+        $('#entryObt, #entryTotal').prop('disabled', !this.checked);
     });
 
     // CNIC formatter
-    document.getElementById('cnic').addEventListener('input', function () {
-        let v = this.value.replace(/\D/g,'').slice(0,13);
+    $('#cnic').on('input', function () {
+        var v = this.value.replace(/\D/g,'').slice(0,13);
         if (v.length > 12)     v = v.slice(0,5)+'-'+v.slice(5,12)+'-'+v.slice(12);
         else if (v.length > 5) v = v.slice(0,5)+'-'+v.slice(5);
         this.value = v;
     });
 
     // Phone formatter
-    document.getElementById('phone').addEventListener('input', function () {
-        let v = this.value.replace(/\D/g,'').slice(0,11);
+    $('#phone').on('input', function () {
+        var v = this.value.replace(/\D/g,'').slice(0,11);
         if (v.length > 4) v = v.slice(0,4)+'-'+v.slice(4);
         this.value = v;
     });
+
 });
 </script>
 @endpush

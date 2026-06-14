@@ -69,46 +69,71 @@ Route::post('student/inquiryform', [ViewController::class, 'inquiresformStore'])
 Route::middleware(['auth', 'admin.auth'])->prefix('admin')->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('admin.dashboard');
-    Route::get('/faculty', [DashboardController::class, 'faculty'])->name('faculty');
-    Route::get('/faculty/create', [DashboardController::class, 'facultyform'])->name('facultyform');
-    Route::post('/faculty/create', [DashboardController::class, 'storeFaculty'])->name('facultyform.store');
-    Route::get('/faculty/{faculty}/edit', [DashboardController::class, 'editFaculty'])->name('faculty.edit');
-    Route::post('/faculty/{faculty}/update', [DashboardController::class, 'updateFaculty'])->name('faculty.update');
-    Route::delete('/faculty/{faculty}/delete', [DashboardController::class, 'destroyFaculty'])->name('faculty.delete');
-    Route::post('/faculty/{faculty}/assign-department', [DashboardController::class, 'assignDepartment'])->name('faculty.assign.department');
-    Route::get('/inquiries', [DashboardController::class, 'inquires'])->name('inquires');
-    Route::get('/inquiry/create', [DashboardController::class, 'inquiresform'])->name('inquiryform');
-    Route::post('/inquiry/create', [DashboardController::class, 'inquiresformStore'])->name('inquiryform.store');
-    Route::put('/inquiry/status/{id}', [DashboardController::class, 'updateStatus'])->name('inquiry.status.update');
-    Route::get('/inquiry/{id}/edit', [DashboardController::class, 'edit'])->name('inquiry.edit');
-    Route::put('/inquiry/{id}/update', [DashboardController::class, 'inquiresformUpdate'])->name('inquiry.update');
-    Route::delete('/inquiry/{id}/delete', [DashboardController::class, 'destroy'])->name('inquiry.delete');
-    Route::get('/students', [DashboardController::class, 'student'])->name('admin.students');
-    Route::get('/students/{student}/edit', [DashboardController::class, 'editStudent'])->name('student.edit');
-    Route::post('/students/{student}/update', [DashboardController::class, 'updateStudent'])->name('student.update');
-    Route::delete('/students/{student}/delete', [DashboardController::class, 'destroyStudent'])->name('student.delete');
 
-    // Departments & Courses
-    Route::get('/departments', [DepartmentController::class, 'index'])->name('departments.index');
-    Route::post('/departments', [DepartmentController::class, 'store'])->name('departments.store');
-    Route::put('/departments/{department}', [DepartmentController::class, 'update'])->name('departments.update');
-    Route::delete('/departments/{department}', [DepartmentController::class, 'destroy'])->name('departments.destroy');
+    // ── Inquiries (inquiry.view required) ──
+    Route::middleware('can:inquiry.view')->group(function () {
+        Route::get('/inquiries', [DashboardController::class, 'inquires'])->name('inquires');
+        Route::get('/inquiry/{inquiry}/show', [DashboardController::class, 'showInquiry'])->name('inquiry.show');
+        Route::put('/inquiry/status/{id}', [DashboardController::class, 'updateStatus'])->name('inquiry.status.update');
+        Route::get('/inquiry/{inquiry}/comments', [DashboardController::class, 'showComments'])->name('inquiry.comments');
+        Route::post('/inquiry/{inquiry}/comments', [DashboardController::class, 'storeComment'])->name('inquiry.comments.store');
+    });
+    Route::middleware('can:inquiry.create')->group(function () {
+        Route::get('/inquiry/create', [DashboardController::class, 'inquiresform'])->name('inquiryform');
+        Route::post('/inquiry/create', [DashboardController::class, 'inquiresformStore'])->name('inquiryform.store');
+    });
+    Route::middleware('can:inquiry.edit')->group(function () {
+        Route::get('/inquiry/{id}/edit', [DashboardController::class, 'edit'])->name('inquiry.edit');
+        Route::put('/inquiry/{id}/update', [DashboardController::class, 'inquiresformUpdate'])->name('inquiry.update');
+    });
+    Route::delete('/inquiry/{id}/delete', [DashboardController::class, 'destroy'])->middleware('can:inquiry.delete')->name('inquiry.delete');
 
-    Route::post('/departments/{department}/courses', [DepartmentController::class, 'storeCourse'])->name('courses.store');
-    Route::put('/courses/{course}', [DepartmentController::class, 'updateCourse'])->name('courses.update');
-    Route::delete('/courses/{course}', [DepartmentController::class, 'destroyCourse'])->name('courses.destroy');
+    // ── Faculty (faculty.view required) ──
+    Route::middleware('can:faculty.view')->group(function () {
+        Route::get('/faculty', [DashboardController::class, 'faculty'])->name('faculty');
+        Route::get('/faculty/{faculty}/show', [DashboardController::class, 'showFacultyView'])->name('faculty.show');
+        Route::get('/faculty/create', [DashboardController::class, 'facultyform'])->name('facultyform');
+        Route::post('/faculty/create', [DashboardController::class, 'storeFaculty'])->name('facultyform.store');
+        Route::get('/faculty/{faculty}/edit', [DashboardController::class, 'editFaculty'])->name('faculty.edit');
+        Route::post('/faculty/{faculty}/update', [DashboardController::class, 'updateFaculty'])->name('faculty.update');
+        Route::delete('/faculty/{faculty}/delete', [DashboardController::class, 'destroyFaculty'])->name('faculty.delete');
+        Route::post('/faculty/{faculty}/assign-department', [DashboardController::class, 'assignDepartment'])->name('faculty.assign.department');
+    });
 
-    // Access — Users
-    Route::get('/access/users', [UserController::class, 'index'])->name('access.users.index');
-    Route::post('/access/users', [UserController::class, 'store'])->name('access.users.store');
-    Route::get('/access/users/{user}/edit', [UserController::class, 'edit'])->name('access.users.edit');
-    Route::put('/access/users/{user}', [UserController::class, 'update'])->name('access.users.update');
-    Route::delete('/access/users/{user}', [UserController::class, 'destroy'])->name('access.users.destroy');
+    // ── Students (student.view required) ──
+    Route::middleware('can:student.view')->group(function () {
+        Route::get('/students', [DashboardController::class, 'student'])->name('admin.students');
+        Route::get('/students/{student}/show', [DashboardController::class, 'showStudent'])->name('student.show');
+        Route::get('/students/{student}/edit', [DashboardController::class, 'editStudent'])->name('student.edit');
+        Route::post('/students/{student}/update', [DashboardController::class, 'updateStudent'])->name('student.update');
+        Route::delete('/students/{student}/delete', [DashboardController::class, 'destroyStudent'])->name('student.delete');
+    });
 
-    // Access — Roles
-    Route::get('/access/roles', [RoleController::class, 'index'])->name('access.roles.index');
-    Route::post('/access/roles', [RoleController::class, 'store'])->name('access.roles.store');
-    Route::put('/access/roles/{role}', [RoleController::class, 'update'])->name('access.roles.update');
-    Route::delete('/access/roles/{role}', [RoleController::class, 'destroy'])->name('access.roles.destroy');
+    // ── Departments & Courses (department.view required) ──
+    Route::middleware('can:department.view')->group(function () {
+        Route::get('/departments', [DepartmentController::class, 'index'])->name('departments.index');
+        Route::post('/departments', [DepartmentController::class, 'store'])->name('departments.store');
+        Route::put('/departments/{department}', [DepartmentController::class, 'update'])->name('departments.update');
+        Route::delete('/departments/{department}', [DepartmentController::class, 'destroy'])->name('departments.destroy');
+        Route::post('/departments/{department}/courses', [DepartmentController::class, 'storeCourse'])->name('courses.store');
+        Route::put('/courses/{course}', [DepartmentController::class, 'updateCourse'])->name('courses.update');
+        Route::delete('/courses/{course}', [DepartmentController::class, 'destroyCourse'])->name('courses.destroy');
+    });
+
+    // ── Access Control ──
+    Route::middleware('can:user.view')->group(function () {
+        Route::get('/access/users', [UserController::class, 'index'])->name('access.users.index');
+        Route::get('/access/users/{user}/show', [UserController::class, 'show'])->name('access.users.show');
+        Route::post('/access/users', [UserController::class, 'store'])->name('access.users.store');
+        Route::get('/access/users/{user}/edit', [UserController::class, 'edit'])->name('access.users.edit');
+        Route::put('/access/users/{user}', [UserController::class, 'update'])->name('access.users.update');
+        Route::delete('/access/users/{user}', [UserController::class, 'destroy'])->name('access.users.destroy');
+    });
+    Route::middleware('can:role.view')->group(function () {
+        Route::get('/access/roles', [RoleController::class, 'index'])->name('access.roles.index');
+        Route::post('/access/roles', [RoleController::class, 'store'])->name('access.roles.store');
+        Route::put('/access/roles/{role}', [RoleController::class, 'update'])->name('access.roles.update');
+        Route::delete('/access/roles/{role}', [RoleController::class, 'destroy'])->name('access.roles.destroy');
+    });
 
 });
