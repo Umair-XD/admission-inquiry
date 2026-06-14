@@ -67,7 +67,7 @@
                 <label class="form-label fw-semibold">Course</label>
                 <select name="course_id" id="course"
                         class="form-select select2 @error('course_id') is-invalid @enderror">
-                    <option value="">— Select Course —</option>
+                    <option value="">Select Course</option>
                 </select>
                 @error('course_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
             </div>

@@ -36,6 +36,37 @@
 
 <div id="editFacultyModalContainer"></div>
 
+{{-- Assign Department Modal --}}
+<div class="modal fade" id="assignDeptModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title fw-bold">Assign Department</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="assignDeptForm" method="POST">
+                @csrf
+                <div class="modal-body">
+                    <label class="form-label fw-semibold">Department</label>
+                    <select name="department_id" id="assignDeptSelect" class="form-select select2">
+                        <option value="">— None —</option>
+                        @foreach($departments as $dept)
+                            <option value="{{ $dept->id }}">{{ $dept->name }}</option>
+                        @endforeach
+                    </select>
+                    <small class="text-muted mt-1 d-block">This staff member will only see inquiries for the selected department.</small>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary btn-sm">
+                        <i class="fa-solid fa-floppy-disk me-1"></i> Save
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @push('scripts')
@@ -72,6 +103,14 @@ function openFacultyModal(id) {
         $('#editFacultyModalContainer').html(html);
         $('#editFacultyModal').modal('show');
     });
+}
+
+function openAssignDept(facultyId, currentDeptId) {
+    var baseUrl = '{{ url("admin/faculty") }}/' + facultyId + '/assign-department';
+    $('#assignDeptForm').attr('action', baseUrl);
+    var $select = $('#assignDeptSelect');
+    $select.val(currentDeptId || '').trigger('change');
+    $('#assignDeptModal').modal('show');
 }
 </script>
 @endpush

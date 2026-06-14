@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Faculty extends Model
 {
     protected $fillable = [
+        'user_id',
         'first_name',
         'last_name',
         'personal_email',
@@ -18,4 +19,9 @@ class Faculty extends Model
         'specialization',
         'profile_picture',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(\App\Models\User::class);
+    }
 }

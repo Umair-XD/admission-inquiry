@@ -19,7 +19,8 @@ class AdminAuth
             return redirect()->route('admin.login');
         }
 
-        if (Auth::user()->role !== RoleEnum::SUPER_ADMIN) {
+        $allowed = [RoleEnum::SUPER_ADMIN, RoleEnum::ADMIN, RoleEnum::STAFF];
+        if (! in_array(Auth::user()->role, $allowed)) {
             Auth::logout();
 
             return redirect()->route('admin.login')->with('error', 'Access denied. Unauthorized role.');

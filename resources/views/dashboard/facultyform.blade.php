@@ -56,10 +56,25 @@
             </div>
 
             <div class="col-md-6">
-                <label class="form-label fw-semibold">Official Email</label>
+                <label class="form-label fw-semibold">Official Email <span class="text-danger">*</span>
+                    <small class="text-muted fw-normal">(used for admin login)</small>
+                </label>
                 <input type="email" class="form-control @error('official_email') is-invalid @enderror"
                        name="official_email" value="{{ old('official_email') }}" placeholder="example@nfc.edu.pk" required>
                 @error('official_email')<div class="invalid-feedback">{{ $message }}</div>@enderror
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Password <span class="text-danger">*</span></label>
+                <input type="password" class="form-control @error('password') is-invalid @enderror"
+                       name="password" placeholder="Min 8 characters" required>
+                @error('password')<div class="invalid-feedback">{{ $message }}</div>@enderror
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Confirm Password <span class="text-danger">*</span></label>
+                <input type="password" class="form-control"
+                       name="password_confirmation" placeholder="Repeat password" required>
             </div>
 
             <div class="col-md-6">

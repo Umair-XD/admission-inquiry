@@ -47,7 +47,7 @@ class FacultyListRequest extends FormRequest
         $col = in_array($orderCol, $allowed) ? $orderCol : 'id';
         $dir = $orderDir === 'asc' ? 'asc' : 'desc';
 
-        $records = $query->orderBy($col, $dir)->skip($start)->take($length)->get();
+        $records = $query->with('user.department')->orderBy($col, $dir)->skip($start)->take($length)->get();
 
         $data = $records->map(function ($f) {
             $initial = strtoupper(substr($f->first_name, 0, 1));
@@ -68,8 +68,13 @@ class FacultyListRequest extends FormRequest
             $exp = '<span class="badge bg-light text-dark border">'.$f->experience.' yr'.($f->experience != 1 ? 's' : '').'</span>';
 
             $deleteUrl = route('faculty.delete', $f->id);
+            $deptName  = $f->user?->department?->name ?? '<span class="text-muted small">None</span>';
+            $deptId    = $f->user?->department_id ?? '';
 
-            $actions = '<button class="btn btn-sm btn-outline-primary me-1"
+            $actions = '<button class="btn btn-sm btn-outline-success me-1"
+                    onclick="openAssignDept('.$f->id.',\''.$deptId.'\')" title="Assign Department">
+                    <i class="fa-solid fa-building me-1"></i>'.$deptName.'</button>
+                <button class="btn btn-sm btn-outline-primary me-1"
                     onclick="openFacultyModal('.$f->id.')" title="Edit">
                     <i class="fa-solid fa-pen"></i></button>
                 <form action="'.$deleteUrl.'" method="POST" style="display:inline"

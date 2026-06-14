@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Enums\RoleEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Dashboard\FacultyListRequest;
 use App\Http\Requests\Dashboard\InquiryListRequest;
@@ -13,7 +14,9 @@ use App\Models\Faculty;
 use App\Models\Inquiry;
 use App\Models\InquiryDegree;
 use App\Models\Student;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class DashboardController extends Controller
 {
@@ -48,7 +51,8 @@ class DashboardController extends Controller
             return $request->processRequest();
         }
 
-        return view('dashboard.faculty');
+        $departments = Department::orderBy('name')->get();
+        return view('dashboard.faculty', compact('departments'));
     }
 
     public function facultyform()
@@ -58,35 +62,46 @@ class DashboardController extends Controller
 
     public function storeFaculty(Request $request)
     {
-        // dd($request->all());
         $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'personal_email' => 'required|email|max:255',
-            'official_email' => 'required|email|max:255',
-            'phone' => 'required|string|max:20',
-            'designation' => 'required|string|max:255',
-            'degree' => 'required|string|max:255',
-            'experience' => 'required|integer|min:0',
-            'specialization' => 'required|string|max:255',
+            'first_name'      => 'required|string|max:255',
+            'last_name'       => 'required|string|max:255',
+            'personal_email'  => 'required|email|max:255',
+            'official_email'  => 'required|email|unique:users,email|max:255',
+            'password'        => 'required|string|min:8|confirmed',
+            'phone'           => 'required|string|max:20',
+            'designation'     => 'required|string|max:255',
+            'degree'          => 'required|string|max:255',
+            'experience'      => 'required|integer|min:0',
+            'specialization'  => 'required|string|max:255',
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
+        // Create the staff user account
+        $user = User::create([
+            'name'     => $request->first_name.' '.$request->last_name,
+            'email'    => $request->official_email,
+            'password' => Hash::make($request->password),
+            'role'     => RoleEnum::STAFF,
+        ]);
+        $user->assignRole('staff');
+
+        // Build faculty data
         $facultyData = $request->only([
             'first_name', 'last_name', 'personal_email', 'official_email',
             'phone', 'designation', 'degree', 'experience', 'specialization',
         ]);
+        $facultyData['user_id'] = $user->id;
 
-        // Handle profile picture upload
         if ($request->hasFile('profile_picture')) {
             $file = $request->file('profile_picture');
             $filename = time().'_'.$file->getClientOriginalName();
             $file->move(public_path('faculty_pictures'), $filename);
             $facultyData['profile_picture'] = $filename;
         }
+
         Faculty::create($facultyData);
 
-        return redirect()->back()->with('success', 'Faculty record saved successfully!');
+        return redirect()->route('faculty')->with('success', 'Faculty added and staff account created successfully!');
     }
     // public function inquires(){
     //     $inquiries=Inquiry::all();
@@ -412,5 +427,21 @@ class DashboardController extends Controller
     {
         $faculty->delete();
         return back()->with('success', 'Faculty member deleted successfully.');
+    }
+
+    public function assignDepartment(Request $request, Faculty $faculty)
+    {
+        $request->validate([
+            'department_id' => 'nullable|exists:departments,id',
+        ]);
+
+        if (! $faculty->user_id) {
+            return back()->with('error', 'This faculty member has no linked user account.');
+        }
+
+        User::where('id', $faculty->user_id)
+            ->update(['department_id' => $request->department_id ?: null]);
+
+        return back()->with('success', 'Department assigned successfully.');
     }
 }

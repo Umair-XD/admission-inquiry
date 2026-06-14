@@ -75,6 +75,7 @@ Route::middleware(['auth', 'admin.auth'])->prefix('admin')->group(function () {
     Route::get('/faculty/{faculty}/edit', [DashboardController::class, 'editFaculty'])->name('faculty.edit');
     Route::post('/faculty/{faculty}/update', [DashboardController::class, 'updateFaculty'])->name('faculty.update');
     Route::delete('/faculty/{faculty}/delete', [DashboardController::class, 'destroyFaculty'])->name('faculty.delete');
+    Route::post('/faculty/{faculty}/assign-department', [DashboardController::class, 'assignDepartment'])->name('faculty.assign.department');
     Route::get('/inquiries', [DashboardController::class, 'inquires'])->name('inquires');
     Route::get('/inquiry/create', [DashboardController::class, 'inquiresform'])->name('inquiryform');
     Route::post('/inquiry/create', [DashboardController::class, 'inquiresformStore'])->name('inquiryform.store');
