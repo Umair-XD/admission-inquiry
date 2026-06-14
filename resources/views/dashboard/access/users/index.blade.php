@@ -61,13 +61,26 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-semibold small">Role</label>
-                        <select name="role" class="form-select select2 @error('role') is-invalid @enderror" required>
+                        <select name="role" id="addUserRole"
+                                class="form-select select2 @error('role') is-invalid @enderror" required>
                             <option value="" disabled selected>Select role</option>
                             @foreach(\App\Enums\RoleEnum::getLabels() as $value => $label)
                                 <option value="{{ $value }}" {{ old('role') === $value ? 'selected' : '' }}>{{ $label }}</option>
                             @endforeach
                         </select>
                         @error('role')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                    </div>
+                    <div class="mb-3" id="addUserDeptWrap" style="display:none;">
+                        <label class="form-label fw-semibold small">Assigned Department</label>
+                        <select name="department_id" class="form-select select2">
+                            <option value="">— None —</option>
+                            @foreach($departments as $dept)
+                                <option value="{{ $dept->id }}" {{ old('department_id') == $dept->id ? 'selected' : '' }}>
+                                    {{ $dept->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <small class="text-muted">Staff will only see inquiries for this department.</small>
                     </div>
                     <div class="mb-1">
                         <label class="form-label fw-semibold small">Password</label>
@@ -113,6 +126,11 @@ $(document).ready(function () {
             emptyTable: 'No users found'
         }
     });
+});
+
+// Show department field only for staff role (add modal)
+document.getElementById('addUserRole').addEventListener('change', function () {
+    document.getElementById('addUserDeptWrap').style.display = this.value === 'staff' ? '' : 'none';
 });
 
 function openUserModal(id) {

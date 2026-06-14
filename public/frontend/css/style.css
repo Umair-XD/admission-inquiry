@@ -1,3 +1,7 @@
+/* Hide scrollbar but keep scroll functionality */
+::-webkit-scrollbar { width: 0; height: 0; }
+* { scrollbar-width: none; }
+
 /*home page css*/
 .sticky-all-headers {
     position: sticky;

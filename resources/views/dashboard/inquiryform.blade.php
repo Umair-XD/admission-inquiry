@@ -64,10 +64,10 @@
                 @error('department_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
             </div>
             <div class="col-md-3">
-                <label class="form-label fw-semibold">Course <span class="text-danger">*</span></label>
+                <label class="form-label fw-semibold">Course</label>
                 <select name="course_id" id="course"
-                        class="form-select select2 @error('course_id') is-invalid @enderror" required>
-                    <option value="" disabled selected>Select Course</option>
+                        class="form-select select2 @error('course_id') is-invalid @enderror">
+                    <option value="">— Select Course —</option>
                 </select>
                 @error('course_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
             </div>

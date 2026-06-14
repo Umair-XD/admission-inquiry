@@ -20,11 +20,18 @@ class DashboardController extends Controller
     // Auth is enforced via the 'admin.auth' middleware on the route group.
     public function dashboard()
     {
-        $totalInquiries = Inquiry::count();
+        $user = auth()->user();
+
+        $inquiryQuery = Inquiry::query();
+        if ($user->role === 'staff' && $user->department_id) {
+            $inquiryQuery->where('department_id', $user->department_id);
+        }
+
+        $totalInquiries   = (clone $inquiryQuery)->count();
         $totalDepartments = Department::count();
-        $totalFaculty = Faculty::count();
-        $totalStudents = Student::count();
-        $recentInquiries = Inquiry::with('department')->latest()->take(10)->get();
+        $totalFaculty     = Faculty::count();
+        $totalStudents    = Student::count();
+        $recentInquiries  = (clone $inquiryQuery)->with('department')->latest()->take(10)->get();
 
         return view('dashboard.home', compact(
             'totalInquiries',
@@ -165,7 +172,7 @@ class DashboardController extends Controller
             'phone' => 'required',
             'cnic' => 'required',
             'department_id' => 'required',
-            'course_id' => 'required',
+            'course_id' => 'nullable|exists:courses,id',
         ]);
 
         // ✅ 1. SAVE MAIN INQUIRY
@@ -329,5 +336,81 @@ class DashboardController extends Controller
         }
 
         return view('dashboard.student');
+    }
+
+    public function editStudent(Student $student)
+    {
+        return view('dashboard.student_edit_modal', compact('student'));
+    }
+
+    public function updateStudent(Request $request, Student $student)
+    {
+        $request->validate([
+            'name'              => 'required|string|max:255',
+            'age'               => 'required|numeric|min:1|max:100',
+            'mobile'            => 'required|string|max:20',
+            'cnic'              => 'required|string|max:20',
+            'address'           => 'nullable|string|max:500',
+            'matric_marks'      => 'nullable|numeric',
+            'part1_marks'       => 'nullable|numeric',
+            'part2_marks'       => 'nullable|numeric',
+            'entry_test_marks'  => 'nullable|numeric',
+        ]);
+
+        $student->update($request->only([
+            'name', 'age', 'mobile', 'cnic', 'address',
+            'matric_marks', 'part1_marks', 'part2_marks', 'entry_test_marks',
+        ]));
+
+        return back()->with('success', 'Student updated successfully.');
+    }
+
+    public function destroyStudent(Student $student)
+    {
+        $student->delete();
+        return back()->with('success', 'Student deleted successfully.');
+    }
+
+    public function editFaculty(Faculty $faculty)
+    {
+        return view('dashboard.faculty_edit_modal', compact('faculty'));
+    }
+
+    public function updateFaculty(Request $request, Faculty $faculty)
+    {
+        $request->validate([
+            'first_name'     => 'required|string|max:255',
+            'last_name'      => 'required|string|max:255',
+            'personal_email' => 'required|email|max:255',
+            'official_email' => 'required|email|max:255',
+            'phone'          => 'required|string|max:20',
+            'designation'    => 'required|string|max:255',
+            'degree'         => 'required|string|max:255',
+            'experience'     => 'required|integer|min:0',
+            'specialization' => 'required|string|max:255',
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $data = $request->only([
+            'first_name', 'last_name', 'personal_email', 'official_email',
+            'phone', 'designation', 'degree', 'experience', 'specialization',
+        ]);
+
+        if ($request->hasFile('profile_picture')) {
+            $file = $request->file('profile_picture');
+            $filename = time().'_'.$file->getClientOriginalName();
+            $file->move(public_path('faculty_pictures'), $filename);
+            $data['profile_picture'] = $filename;
+        }
+
+        $faculty->update($data);
+
+        return back()->with('success', 'Faculty updated successfully.');
+    }
+
+    public function destroyFaculty(Faculty $faculty)
+    {
+        $faculty->delete();
+        return back()->with('success', 'Faculty member deleted successfully.');
     }
 }

@@ -18,11 +18,23 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-semibold small">Role</label>
-                        <select name="role" class="form-select select2" required>
+                        <select name="role" id="editUserRole" class="form-select select2" required>
                             @foreach(\App\Enums\RoleEnum::getLabels() as $value => $label)
                                 <option value="{{ $value }}" {{ $user->role === $value ? 'selected' : '' }}>{{ $label }}</option>
                             @endforeach
                         </select>
+                    </div>
+                    <div class="mb-3" id="editUserDeptWrap" style="{{ $user->role === 'staff' ? '' : 'display:none;' }}">
+                        <label class="form-label fw-semibold small">Assigned Department</label>
+                        <select name="department_id" class="form-select select2">
+                            <option value="">— None —</option>
+                            @foreach($departments as $dept)
+                                <option value="{{ $dept->id }}" {{ $user->department_id == $dept->id ? 'selected' : '' }}>
+                                    {{ $dept->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <small class="text-muted">Staff will only see inquiries for this department.</small>
                     </div>
                     <div class="mb-1">
                         <label class="form-label fw-semibold small">
@@ -39,3 +51,9 @@
         </div>
     </div>
 </div>
+
+<script>
+document.getElementById('editUserRole').addEventListener('change', function () {
+    document.getElementById('editUserDeptWrap').style.display = this.value === 'staff' ? '' : 'none';
+});
+</script>

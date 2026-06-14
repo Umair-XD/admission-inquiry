@@ -6,9 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'NFC Institute of Engineering & Fertilizer Research')</title>
 
+    <link rel="icon" type="image/png" href="{{ asset('logo.png') }}">
     <link rel="stylesheet" href="{{ asset('frontend/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/css/style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css">
+    @stack('styles')
 </head>
 
 <body class="bg-light d-flex flex-column min-vh-100">
@@ -21,7 +25,26 @@
 
     @include('frontend.includes.footer')
 
+    {{-- Flash toast notifications (not when modal reopens — errors shown inside modal) --}}
+    @if(session('success') || (session('error') && !session('open_auth_modal')))
+    <div class="position-fixed top-0 end-0 p-3" style="z-index:9999;">
+        <div id="flashToast" class="toast align-items-center border-0 text-white
+            {{ session('success') ? 'bg-success' : 'bg-danger' }}"
+            role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body fw-semibold">
+                    <i class="fa-solid {{ session('success') ? 'fa-circle-check' : 'fa-circle-exclamation' }} me-2"></i>
+                    {{ session('success') ?? session('error') }}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    </div>
+    @endif
+
     <script src="{{ asset('frontend/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="{{ asset('frontend/js/custom.js') }}"></script>
 
     {{-- Auto-open auth modal after redirect --}}
@@ -39,21 +62,36 @@
         </script>
     @endif
 
+    {{-- Auto-show flash toast --}}
+    @if(session('success') || (session('error') && !session('open_auth_modal')))
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var el = document.getElementById('flashToast');
+            if (el) {
+                var toast = new bootstrap.Toast(el, { delay: 4000 });
+                toast.show();
+            }
+        });
+    </script>
+    @endif
+
+    @stack('scripts')
+
     <script>
         (function() {
-            // CNIC formatter inside modal
-            var cnicInput = document.getElementById('modalCnic');
-            if (cnicInput) {
-                cnicInput.addEventListener('input', function(e) {
-                    let value = e.target.value.replace(/\D/g, '').slice(0, 13);
-                    if (value.length > 12) value = value.slice(0, 5) + '-' + value.slice(5, 12) + '-' + value
-                        .slice(12);
-                    else if (value.length > 5) value = value.slice(0, 5) + '-' + value.slice(5);
-                    e.target.value = value;
+            function applyCnicFormatter(el) {
+                if (!el) return;
+                el.addEventListener('input', function(e) {
+                    let v = e.target.value.replace(/\D/g, '').slice(0, 13);
+                    if (v.length > 12) v = v.slice(0, 5) + '-' + v.slice(5, 12) + '-' + v.slice(12);
+                    else if (v.length > 5) v = v.slice(0, 5) + '-' + v.slice(5);
+                    e.target.value = v;
                 });
             }
 
-            // Mobile formatter inside modal
+            applyCnicFormatter(document.getElementById('modalCnic'));
+            applyCnicFormatter(document.getElementById('loginCnic'));
+
             var mobileInput = document.getElementById('modalMobile');
             if (mobileInput) {
                 mobileInput.addEventListener('input', function(e) {

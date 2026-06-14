@@ -1,10 +1,5 @@
 
 <!-- =============== MAIN HEADER (NOW SAME SIZE AS FOOTER) =============== -->
-@if(session('success'))
-<div class="alert alert-success text-center">
-    {{ session('success') }}
-</div>
-@endif
 <div class="header-bg">
     <div class="d-flex justify-content-center align-items-center gap-3 py-2">
         <img src="{{ asset('logo.png') }}" height="70">
@@ -60,34 +55,36 @@
 
         @php
             $name = session('student_name');
+            $cnic = session('student_cnic') ?? \App\Models\Student::find(session('student_id'))?->cnic;
             $initial = strtoupper(substr($name, 0, 1));
         @endphp
 
         <div class="dropdown d-inline-block">
 
             <!-- 🔵 Circle Avatar -->
-            <a class="d-flex align-items-center justify-content-center text-white fw-bold rounded-circle bg-primary text-decoration-none dropdown-toggle"
+            <a class="d-flex align-items-center justify-content-center text-white fw-bold rounded-circle text-decoration-none dropdown-toggle"
                href="#"
                role="button"
                data-bs-toggle="dropdown"
-               style="width:40px; height:40px; font-size:16px;">
+               style="width:40px;height:40px;font-size:16px;background:#e8cc14;color:#012a4a !important;">
                 {{ $initial }}
             </a>
 
             <!-- Dropdown -->
             <ul class="dropdown-menu dropdown-menu-end">
 
-                <li class="dropdown-item-text">
-                    <small class="text-muted">
-                        {{ $name }}
-                    </small>
+                <li>
+                    <a class="dropdown-item py-2 d-block" href="{{ route('profile') }}" style="line-height:1.3;">
+                        <span class="fw-semibold d-block">{{ $name }}</span>
+                        <small class="text-muted" style="font-size:.72rem;letter-spacing:.03em;">{{ $cnic }}</small>
+                    </a>
                 </li>
 
                 <li><hr class="dropdown-divider"></li>
 
                 <li>
                     <a class="dropdown-item text-danger" href="{{ route('student.logout') }}">
-                        Logout
+                        <i class="fa-solid fa-right-from-bracket me-2"></i> Logout
                     </a>
                 </li>
 
@@ -162,7 +159,7 @@
                             @csrf
                             <div>
                                 <label class="form-label fw-semibold small">CNIC</label>
-                                <input type="text" name="cnic"
+                                <input type="text" name="cnic" id="loginCnic"
                                        class="form-control"
                                        placeholder="xxxxx-xxxxxxx-x"
                                        value="{{ old('cnic') }}"

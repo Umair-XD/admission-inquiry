@@ -1,13 +1,13 @@
 <div class="modal fade" id="editInquiryModal" tabindex="-1">
-    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <form action="{{ route('inquiry.update', $inquiry->id) }}" method="POST">
                 @csrf @method('PUT')
                 <div class="modal-header bg-primary text-white">
-                    <h6 class="modal-title fw-semibold">Edit Inquiry — {{ $inquiry->name }}</h6>
+                    <h6 class="modal-title fw-semibold">Edit ({{ $inquiry->name }})</h6>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" style="max-height:65vh;overflow-y:auto;">
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label fw-semibold small">Name</label>

@@ -21,9 +21,15 @@ class InquiryListRequest extends FormRequest
     public function processRequest(): JsonResponse
     {
         $status = $this->get('status', 'active');
+        $user   = auth()->user();
 
         $query = Inquiry::with(['department', 'course', 'degrees'])
             ->where('status', $status);
+
+        // Staff with a department assigned can only see their department's inquiries
+        if ($user->role === 'staff' && $user->department_id) {
+            $query->where('department_id', $user->department_id);
+        }
 
         $draw = (int) $this->get('draw', 1);
         $start = (int) $this->get('start', 0);

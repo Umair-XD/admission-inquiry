@@ -82,17 +82,17 @@
 
     {{-- Edit Role Modal --}}
     <div class="modal fade" id="editRoleModal{{ $role->id }}" tabindex="-1">
-        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <form action="{{ route('access.roles.update', $role) }}" method="POST">
                     @csrf @method('PUT')
                     <div class="modal-header">
                         <h6 class="modal-title fw-semibold">
-                            Edit — {{ ucwords(str_replace('_', ' ', $role->name)) }}
+                            Edit ({{ ucwords(str_replace('_', ' ', $role->name)) }})
                         </h6>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body" style="max-height:65vh;overflow-y:auto;">
 
                         <div class="mb-4">
                             <label class="form-label fw-semibold">Role Name</label>

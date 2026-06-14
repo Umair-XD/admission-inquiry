@@ -31,6 +31,7 @@ Route::get('/research-innovation', [ViewController::class, 'researchinnovation']
 Route::get('/sign-in', [ViewController::class, 'signin'])->name('signin');
 Route::get('/student', [ViewController::class, 'student'])->name('student');
 Route::get('/profile', [ViewController::class, 'profile'])->name('profile');
+Route::post('/student/profile/update', [ViewController::class, 'updateProfile'])->name('student.profile.update');
 Route::post('/student/register', [ViewController::class, 'saveStudent']);
 Route::post('/student/login', [ViewController::class, 'doLogin']);
 Route::get('/student/logout', [ViewController::class, 'logout'])->name('student.logout');
@@ -71,6 +72,9 @@ Route::middleware(['auth', 'admin.auth'])->prefix('admin')->group(function () {
     Route::get('/faculty', [DashboardController::class, 'faculty'])->name('faculty');
     Route::get('/faculty/create', [DashboardController::class, 'facultyform'])->name('facultyform');
     Route::post('/faculty/create', [DashboardController::class, 'storeFaculty'])->name('facultyform.store');
+    Route::get('/faculty/{faculty}/edit', [DashboardController::class, 'editFaculty'])->name('faculty.edit');
+    Route::post('/faculty/{faculty}/update', [DashboardController::class, 'updateFaculty'])->name('faculty.update');
+    Route::delete('/faculty/{faculty}/delete', [DashboardController::class, 'destroyFaculty'])->name('faculty.delete');
     Route::get('/inquiries', [DashboardController::class, 'inquires'])->name('inquires');
     Route::get('/inquiry/create', [DashboardController::class, 'inquiresform'])->name('inquiryform');
     Route::post('/inquiry/create', [DashboardController::class, 'inquiresformStore'])->name('inquiryform.store');
@@ -79,6 +83,9 @@ Route::middleware(['auth', 'admin.auth'])->prefix('admin')->group(function () {
     Route::put('/inquiry/{id}/update', [DashboardController::class, 'inquiresformUpdate'])->name('inquiry.update');
     Route::delete('/inquiry/{id}/delete', [DashboardController::class, 'destroy'])->name('inquiry.delete');
     Route::get('/students', [DashboardController::class, 'student'])->name('admin.students');
+    Route::get('/students/{student}/edit', [DashboardController::class, 'editStudent'])->name('student.edit');
+    Route::post('/students/{student}/update', [DashboardController::class, 'updateStudent'])->name('student.update');
+    Route::delete('/students/{student}/delete', [DashboardController::class, 'destroyStudent'])->name('student.delete');
 
     // Departments & Courses
     Route::get('/departments', [DepartmentController::class, 'index'])->name('departments.index');

@@ -74,13 +74,26 @@ class StudentListRequest extends FormRequest
             }
             $academic .= '</div>';
 
+            $editUrl   = route('student.edit', $s->id);
+            $deleteUrl = route('student.delete', $s->id);
+
+            $actions = '<button class="btn btn-sm btn-outline-primary me-1"
+                    onclick="openStudentModal('.$s->id.')" title="Edit">
+                    <i class="fa-solid fa-pen"></i></button>
+                <form action="'.$deleteUrl.'" method="POST" style="display:inline"
+                    onsubmit="confirmDelete(this,\'Delete this student?\'); return false;">
+                    '.csrf_field().'<input type="hidden" name="_method" value="DELETE">
+                    <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
+                </form>';
+
             return [
-                'id' => $s->id,
+                'id'      => $s->id,
                 'details' => $details,
-                'age' => $s->age,
+                'age'     => $s->age,
                 'address' => '<span title="'.e($s->address).'" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:.85rem;">'.e($s->address).'</span>',
                 'academic' => $academic,
                 'created' => $s->created_at->format('d M Y'),
+                'actions' => $actions,
             ];
         });
 

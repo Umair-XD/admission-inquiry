@@ -23,12 +23,15 @@
                         <th>Address</th>
                         <th>Academic Record</th>
                         <th>Registered</th>
+                        <th class="no-sort">Actions</th>
                     </tr>
                 </thead>
             </table>
         </div>
     </div>
 </div>
+
+<div id="editStudentModalContainer"></div>
 
 @endsection
 
@@ -41,6 +44,7 @@ $(document).ready(function () {
         order: [[0, 'desc']],
         pageLength: 10,
         lengthMenu: [10, 25, 50, 100],
+        columnDefs: [{ orderable: false, targets: [-1] }],
         ajax: { url: '{{ route("admin.students") }}' },
         columns: [
             { data: 'id',       className: 'text-muted small' },
@@ -49,6 +53,7 @@ $(document).ready(function () {
             { data: 'address' },
             { data: 'academic' },
             { data: 'created',  className: 'small text-muted' },
+            { data: 'actions',  className: 'text-nowrap' },
         ],
         language: {
             search: '',
@@ -58,5 +63,12 @@ $(document).ready(function () {
         }
     });
 });
+
+function openStudentModal(id) {
+    $.get('{{ url("admin/students") }}/' + id + '/edit', function (html) {
+        $('#editStudentModalContainer').html(html);
+        $('#editStudentModal').modal('show');
+    });
+}
 </script>
 @endpush

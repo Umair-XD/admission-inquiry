@@ -1,271 +1,245 @@
-@extends('dashboard.layouts.student')
+@extends('frontend.layouts.app')
+@section('title', 'Add Inquiry')
 
 @section('content')
 
-@if(session('success'))
-<div class="container-fluid mt-3">
-    <div class="alert alert-success alert-dismissible fade show">
-        <i class="fa-solid fa-circle-check me-2"></i>
-        {{ session('success') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-</div>
-@endif
+<div class="container py-4">
 
-<div class="container-fluid">
-    <div class="row py-4">
-        <div class="col-12 d-flex justify-content-between">
-            <h3 class="text-primary">
-                <i class="fa-solid fa-user"></i> Add Inquiry
-            </h3>
-            <a href="{{route('home')}}" class="btn btn-outline-primary">Back</a>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h4 class="fw-bold mb-0" style="color:#013a63;">
+            <i class="fa-solid fa-file-lines me-2" style="color:#e8cc14;"></i>Add Inquiry
+        </h4>
+        <small class="text-muted">Fill in your application details below</small>
+    </div>
+    <a href="{{ route('home') }}" class="btn btn-outline-secondary btn-sm">
+        <i class="fa-solid fa-arrow-left me-1"></i> Back
+    </a>
+</div>
+
+<form method="POST" action="{{ route('inquiryform.student.store') }}">
+@csrf
+
+{{-- ── Personal Information ── --}}
+<div class="card mb-3 border-0 shadow-sm">
+    <div class="card-header bg-white fw-semibold" style="border-left:3px solid #013a63;">
+        <i class="fa-solid fa-user me-2" style="color:#013a63;"></i>Personal Information
+    </div>
+    <div class="card-body">
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Full Name</label>
+                <input type="text" name="name" class="form-control bg-light"
+                       value="{{ $student->name ?? '' }}" readonly>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label fw-semibold">Age</label>
+                <input type="number" name="age" class="form-control bg-light"
+                       value="{{ $student->age ?? '' }}" readonly>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label fw-semibold">Phone</label>
+                <input type="text" name="phone" class="form-control bg-light"
+                       value="{{ $student->mobile ?? '' }}" readonly>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">CNIC</label>
+                <input type="text" name="cnic" class="form-control bg-light"
+                       value="{{ $student->cnic ?? '' }}" readonly>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label fw-semibold">Department <span class="text-danger">*</span></label>
+                <select name="department_id" id="department" class="form-select select2" required>
+                    <option value="" disabled selected>Select Department</option>
+                    @foreach($departments as $dept)
+                        <option value="{{ $dept->id }}">{{ $dept->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label fw-semibold">Course</label>
+                <select name="course_id" id="course" class="form-select select2">
+                    <option value="">Select Course</option>
+                </select>
+            </div>
         </div>
     </div>
 </div>
 
-<div class="container-fluid">
-    <div class="card">
-        <h5 class="card-header">Add Inquiry</h5>
+{{-- ── Academic Records ── --}}
+<div class="card mb-3 border-0 shadow-sm">
+    <div class="card-header bg-white fw-semibold" style="border-left:3px solid #013a63;">
+        <i class="fa-solid fa-graduation-cap me-2" style="color:#013a63;"></i>Academic Records
+        <small class="text-muted fw-normal ms-2">Select a degree to enter marks</small>
+    </div>
+    <div class="card-body">
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label fw-semibold">Add Degree</label>
+                <select id="degree" class="form-select select2">
+                    <option value="" disabled selected>Select Degree</option>
+                    @foreach($degrees as $degree)
+                        <option value="{{ $degree->id }}">{{ $degree->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
 
-        <div class="card-body">
+        <div id="allDegrees" class="mt-3">
 
-            <form class="row g-4 p-4 bg-light" method="POST" action="{{ route('inquiryform.student.store') }}">
-                @csrf
-
-                {{-- NAME --}}
-                <div class="col-md-6">
-                    <label>Name</label>
-                    {{-- <input type="text" name="name" class="form-control" required> --}}
-                    <input type="text" name="name"
-                    class="form-control"
-                    placeholder="Enter name"
-                    value="{{ $student->name ?? '' }}"
-                    style="background-color: #e3dede;cursor: not-allowed;" readonly>
+            {{-- Matric --}}
+            <div class="degree-box d-none border rounded p-3 mb-3 bg-light" id="degree-1">
+                <div class="fw-semibold small mb-2" style="color:#013a63;">
+                    <i class="fa-solid fa-circle-dot me-1"></i>Matric Marks
                 </div>
-
-                {{-- AGE --}}
-                <div class="col-md-6">
-                    <label>Age</label>
-                    {{-- <input type="number" name="age" class="form-control" required> --}}
-                    <input type="number" name="age"
-                    class="form-control"
-                    placeholder="Enter age"
-                    value="{{ $student->age ?? '' }}"
-                    style="background-color: #e3dede;cursor: not-allowed;" readonly>
-                </div>
-
-                {{-- PHONE --}}
-                <div class="col-md-6">
-                    <label>Phone</label>
-                    {{-- <input type="text" id="phone" name="phone" class="form-control" placeholder="03xx-xxxxxxx"> --}}
-                    <input type="text" name="phone"
-                    class="form-control"
-                    placeholder="03xx-xxxxxxx"
-                    value="{{ $student->mobile ?? '' }}"
-                    style="background-color: #e3dede;cursor: not-allowed;" readonly>
-                </div>
-
-                {{-- CNIC --}}
-                <div class="col-md-6">
-                    <label>CNIC</label>
-                    {{-- <input type="text" id="cnic" name="cnic" class="form-control" placeholder="xxxxx-xxxxxxx-x"> --}}
-                    <input type="text" name="cnic"
-                    class="form-control"
-                    placeholder="3303-xxxxxxx-x"
-                    value="{{ $student->cnic ?? '' }}"
-                    style="background-color: #e3dede;cursor: not-allowed;" readonly>
-                </div>
-
-                {{-- DEPARTMENT --}}
-                <div class="col-md-6">
-                    <label>Department</label>
-                    <select name="department_id" id="department" class="form-select">
-                        <option disabled selected>Select Department</option>
-                        @foreach($departments as $dept)
-                            <option value="{{ $dept->id }}">{{ $dept->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-
-                {{-- COURSE --}}
-                <div class="col-md-6">
-                    <label>Course</label>
-                    <select name="course_id" id="course" class="form-select">
-                        <option disabled selected>Select Course</option>
-                    </select>
-                </div>
-
-                {{-- DEGREE --}}
-                <div class="col-md-6">
-                    <label>Degree</label>
-                    <select id="degree" class="form-select">
-                        <option disabled selected>Select Degree</option>
-                        @foreach($degrees as $degree)
-                            <option value="{{ $degree->id }}">{{ $degree->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-
-                {{-- DEGREE FIELDS --}}
-                <div id="allDegrees">
-
-                    {{-- MATRIC --}}
-                    <div class="degree-box d-none" id="degree-1">
-                        <label>Matric Marks</label>
-                        <div class="row">
-                            <div class="col-6">
-                                <input type="text" name="degrees[1][obtained]" class="form-control" placeholder="Obtained">
-                            </div>
-                            <div class="col-6">
-                                <input type="text" name="degrees[1][total]" class="form-control" placeholder="Total">
-                            </div>
-                        </div>
+                <div class="row g-2">
+                    <div class="col-md-3 col-6">
+                        <label class="form-label small">Obtained</label>
+                        <input type="number" name="degrees[1][obtained]" class="form-control form-control-sm" placeholder="e.g. 850">
                     </div>
-
-                    {{-- INTERMEDIATE --}}
-                    <div class="degree-box d-none" id="degree-2">
-                        <label>Intermediate - Part 1</label>
-                        <input type="text" name="degrees[2][part1_obtained]" class="form-control mb-2" placeholder="Obtained">
-                        <input type="text" name="degrees[2][part1_total]" class="form-control mb-3" placeholder="Total">
-
-                        <label>Intermediate - Part 2</label>
-                        <input type="text" name="degrees[2][part2_obtained]" class="form-control mb-2" placeholder="Obtained">
-                        <input type="text" name="degrees[2][part2_total]" class="form-control" placeholder="Total">
-                    </div>
-
-                    {{-- BS --}}
-                    <div class="degree-box d-none" id="degree-3">
-                        <label>Bachelors Marks</label>
-                        <div class="row">
-                            <div class="col-6">
-                                <input type="text" name="degrees[3][obtained]" class="form-control" placeholder="Obtained">
-                            </div>
-                            <div class="col-6">
-                                <input type="text" name="degrees[3][total]" class="form-control" placeholder="Total">
-                            </div>
-                        </div>
-                    </div>
-
-                    {{-- MS --}}
-                    <div class="degree-box d-none" id="degree-4">
-                        <label>Masters Marks</label>
-                        <div class="row">
-                            <div class="col-6">
-                                <input type="text" name="degrees[4][obtained]" class="form-control" placeholder="Obtained">
-                            </div>
-                            <div class="col-6">
-                                <input type="text" name="degrees[4][total]" class="form-control" placeholder="Total">
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                {{-- ENTRY TEST --}}
-                <div class="col-md-6">
-                    <label>Entry Test</label>
-
-                    <div class="form-check mb-2">
-                        <input type="checkbox" id="entryCheck" class="form-check-input">
-                        <label class="form-check-label">Appeared in Entry Test</label>
-                    </div>
-
-                    <div class="row g-2">
-                        <div class="col-6">
-                            <input type="number" id="entryObt" name="entry_obtained" class="form-control" disabled>
-                        </div>
-                        <div class="col-6">
-                            <input type="number" id="entryTotal" name="entry_total" class="form-control" disabled>
-                        </div>
+                    <div class="col-md-3 col-6">
+                        <label class="form-label small">Total</label>
+                        <input type="number" name="degrees[1][total]" class="form-control form-control-sm" placeholder="e.g. 1100">
                     </div>
                 </div>
+            </div>
 
-                {{-- SUBMIT --}}
-                <div class="col-12 text-center">
-                    <button class="btn btn-primary px-5">Submit</button>
+            {{-- Intermediate --}}
+            <div class="degree-box d-none border rounded p-3 mb-3 bg-light" id="degree-2">
+                <div class="fw-semibold small mb-2" style="color:#013a63;">
+                    <i class="fa-solid fa-circle-dot me-1"></i>Intermediate
                 </div>
+                <div class="row g-2">
+                    <div class="col-12"><small class="text-muted fw-semibold">Part 1</small></div>
+                    <div class="col-md-3 col-6">
+                        <label class="form-label small">Obtained</label>
+                        <input type="number" name="degrees[2][part1_obtained]" class="form-control form-control-sm" placeholder="Obtained">
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <label class="form-label small">Total</label>
+                        <input type="number" name="degrees[2][part1_total]" class="form-control form-control-sm" placeholder="Total">
+                    </div>
+                    <div class="col-12"><small class="text-muted fw-semibold">Part 2</small></div>
+                    <div class="col-md-3 col-6">
+                        <label class="form-label small">Obtained</label>
+                        <input type="number" name="degrees[2][part2_obtained]" class="form-control form-control-sm" placeholder="Obtained">
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <label class="form-label small">Total</label>
+                        <input type="number" name="degrees[2][part2_total]" class="form-control form-control-sm" placeholder="Total">
+                    </div>
+                </div>
+            </div>
 
-            </form>
+            {{-- BS --}}
+            <div class="degree-box d-none border rounded p-3 mb-3 bg-light" id="degree-3">
+                <div class="fw-semibold small mb-2" style="color:#013a63;">
+                    <i class="fa-solid fa-circle-dot me-1"></i>BS / Bachelors
+                </div>
+                <div class="row g-2">
+                    <div class="col-md-3 col-6">
+                        <label class="form-label small">Obtained</label>
+                        <input type="number" name="degrees[3][obtained]" class="form-control form-control-sm" placeholder="e.g. 3.5 GPA">
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <label class="form-label small">Total</label>
+                        <input type="number" name="degrees[3][total]" class="form-control form-control-sm" placeholder="e.g. 4.0">
+                    </div>
+                </div>
+            </div>
+
+            {{-- MS --}}
+            <div class="degree-box d-none border rounded p-3 mb-3 bg-light" id="degree-4">
+                <div class="fw-semibold small mb-2" style="color:#013a63;">
+                    <i class="fa-solid fa-circle-dot me-1"></i>MS / Masters
+                </div>
+                <div class="row g-2">
+                    <div class="col-md-3 col-6">
+                        <label class="form-label small">Obtained</label>
+                        <input type="number" name="degrees[4][obtained]" class="form-control form-control-sm" placeholder="e.g. 3.7 GPA">
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <label class="form-label small">Total</label>
+                        <input type="number" name="degrees[4][total]" class="form-control form-control-sm" placeholder="e.g. 4.0">
+                    </div>
+                </div>
+            </div>
 
         </div>
+
+        {{-- Entry Test --}}
+        <div class="border rounded p-3 bg-light">
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <input type="checkbox" id="entryCheck" class="form-check-input">
+                <label for="entryCheck" class="form-label fw-semibold small mb-0" style="color:#013a63;">
+                    <i class="fa-solid fa-circle-dot me-1"></i>Entry Test
+                </label>
+            </div>
+            <div class="row g-2">
+                <div class="col-md-3 col-6">
+                    <label class="form-label small">Obtained</label>
+                    <input type="number" id="entryObt" name="entry_obtained" class="form-control form-control-sm" placeholder="Obtained" disabled>
+                </div>
+                <div class="col-md-3 col-6">
+                    <label class="form-label small">Total</label>
+                    <input type="number" id="entryTotal" name="entry_total" class="form-control form-control-sm" placeholder="Total" disabled>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 
-{{-- ================= SCRIPTS ================= --}}
+{{-- ── Submit ── --}}
+<div class="d-flex justify-content-end gap-2">
+    <a href="{{ route('home') }}" class="btn btn-outline-secondary">Cancel</a>
+    <button type="submit" class="btn fw-semibold text-white px-4" style="background:#013a63;">
+        <i class="fa-solid fa-paper-plane me-1"></i> Submit Inquiry
+    </button>
+</div>
+
+</form>
+
+</div>
+
+@push('scripts')
 <script>
-document.addEventListener("DOMContentLoaded", function () {
+$(function () {
 
-    /* DEGREE SHOW */
-    document.getElementById('degree').addEventListener('change', function () {
-        let id = this.value;
+    // Select2 on all selects
+    $('select.select2').select2({ theme: 'bootstrap-5', width: '100%' });
 
-        document.querySelectorAll('.degree-box').forEach(box => {
-            box.classList.add('d-none');
-        });
-
-        let selected = document.getElementById('degree-' + id);
-        if (selected) selected.classList.remove('d-none');
+    // Degree selector
+    $('#degree').on('change', function () {
+        $('.degree-box').addClass('d-none');
+        $('#degree-' + this.value).removeClass('d-none');
     });
 
-    /* COURSE LOAD */
-    document.getElementById('department').addEventListener('change', function () {
-
-        let id = this.value;
-        let course = document.getElementById('course');
-
-        course.innerHTML = `<option>Loading...</option>`;
-
-        fetch("{{ route('courses.by.department', ':id') }}".replace(':id', id))
-            .then(res => res.json())
-            .then(data => {
-
-                let html = `<option disabled selected>Select Course</option>`;
-
-                if(data.length === 0){
-                    html = `<option disabled>No Courses Found</option>`;
-                }
-
-                data.forEach(c => {
-                    html += `<option value="${c.id}">${c.name}</option>`;
+    // Course loader
+    $('#department').on('change', function () {
+        var $course = $('#course');
+        $course.empty().append('<option>Loading...</option>').trigger('change');
+        $.getJSON("{{ route('courses.by.department', ':id') }}".replace(':id', this.value), function (data) {
+            $course.empty();
+            if (!data.length) {
+                $course.append('<option value="">No courses available</option>');
+            } else {
+                $course.append('<option value="">Select Course</option>');
+                $.each(data, function (i, c) {
+                    $course.append(new Option(c.name, c.id));
                 });
-
-                course.innerHTML = html;
-            });
+            }
+            $course.trigger('change');
+        });
     });
 
-    /* ENTRY TEST */
-    document.getElementById('entryCheck').addEventListener('change', function () {
-        document.getElementById('entryObt').disabled = !this.checked;
-        document.getElementById('entryTotal').disabled = !this.checked;
-    });
-
-    /* CNIC FORMAT */
-    document.getElementById('cnic').addEventListener('input', function () {
-        let raw = this.value.replace(/\D/g,'').slice(0,13);
-        let formatted = raw;
-
-        if (raw.length > 5 && raw.length <= 12) {
-            formatted = raw.slice(0,5) + '-' + raw.slice(5);
-        } else if (raw.length > 12) {
-            formatted = raw.slice(0,5) + '-' + raw.slice(5,12) + '-' + raw.slice(12);
-        }
-
-        this.value = formatted;
-    });
-
-    /* PHONE FORMAT */
-    document.getElementById('phone').addEventListener('input', function () {
-        let raw = this.value.replace(/\D/g,'').slice(0,11);
-        let formatted = raw;
-
-        if (raw.length > 4) {
-            formatted = raw.slice(0,4) + '-' + raw.slice(4);
-        }
-
-        this.value = formatted;
+    // Entry test toggle
+    $('#entryCheck').on('change', function () {
+        $('#entryObt, #entryTotal').prop('disabled', !this.checked);
     });
 
 });
 </script>
+@endpush
 
 @endsection

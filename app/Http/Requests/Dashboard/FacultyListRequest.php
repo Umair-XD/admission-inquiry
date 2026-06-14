@@ -67,13 +67,25 @@ class FacultyListRequest extends FormRequest
 
             $exp = '<span class="badge bg-light text-dark border">'.$f->experience.' yr'.($f->experience != 1 ? 's' : '').'</span>';
 
+            $deleteUrl = route('faculty.delete', $f->id);
+
+            $actions = '<button class="btn btn-sm btn-outline-primary me-1"
+                    onclick="openFacultyModal('.$f->id.')" title="Edit">
+                    <i class="fa-solid fa-pen"></i></button>
+                <form action="'.$deleteUrl.'" method="POST" style="display:inline"
+                    onsubmit="confirmDelete(this,\'Delete this faculty member?\'); return false;">
+                    '.csrf_field().'<input type="hidden" name="_method" value="DELETE">
+                    <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
+                </form>';
+
             return [
-                'id' => $f->id,
-                'member' => $member,
-                'contact' => $contact,
+                'id'          => $f->id,
+                'member'      => $member,
+                'contact'     => $contact,
                 'designation' => '<span class="badge bg-primary-subtle text-primary">'.e($f->designation).'</span>',
-                'degree' => e($f->degree),
-                'experience' => $exp,
+                'degree'      => e($f->degree),
+                'experience'  => $exp,
+                'actions'     => $actions,
             ];
         });
 

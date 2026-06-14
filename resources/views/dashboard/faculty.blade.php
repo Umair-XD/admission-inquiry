@@ -26,12 +26,15 @@
                         <th>Designation</th>
                         <th>Qualification</th>
                         <th>Experience</th>
+                        <th class="no-sort">Actions</th>
                     </tr>
                 </thead>
             </table>
         </div>
     </div>
 </div>
+
+<div id="editFacultyModalContainer"></div>
 
 @endsection
 
@@ -44,6 +47,7 @@ $(document).ready(function () {
         order: [],
         pageLength: 10,
         lengthMenu: [10, 25, 50, 100],
+        columnDefs: [{ orderable: false, targets: [-1] }],
         ajax: { url: '{{ route("faculty") }}' },
         columns: [
             { data: 'id',          className: 'text-muted small' },
@@ -52,6 +56,7 @@ $(document).ready(function () {
             { data: 'designation' },
             { data: 'degree',      className: 'small fw-medium' },
             { data: 'experience' },
+            { data: 'actions',     className: 'text-nowrap' },
         ],
         language: {
             search: '',
@@ -61,5 +66,12 @@ $(document).ready(function () {
         }
     });
 });
+
+function openFacultyModal(id) {
+    $.get('{{ url("admin/faculty") }}/' + id + '/edit', function (html) {
+        $('#editFacultyModalContainer').html(html);
+        $('#editFacultyModal').modal('show');
+    });
+}
 </script>
 @endpush

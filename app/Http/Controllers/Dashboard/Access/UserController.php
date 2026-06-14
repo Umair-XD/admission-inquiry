@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dashboard\Access;
 use App\Enums\RoleEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Dashboard\UserListRequest;
+use App\Models\Department;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -20,13 +21,15 @@ class UserController extends Controller
         }
 
         $roles = Role::orderBy('name')->get();
+        $departments = Department::orderBy('name')->get();
 
-        return view('dashboard.access.users.index', compact('roles'));
+        return view('dashboard.access.users.index', compact('roles', 'departments'));
     }
 
     public function edit(User $user)
     {
-        return view('dashboard.access.users.edit_modal', compact('user'));
+        $departments = Department::orderBy('name')->get();
+        return view('dashboard.access.users.edit_modal', compact('user', 'departments'));
     }
 
     public function store(Request $request)
@@ -36,6 +39,7 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email',
             'role' => 'required|in:'.implode(',', RoleEnum::getValues()),
             'password' => ['required', Password::min(8)],
+            'department_id' => 'nullable|exists:departments,id',
         ]);
 
         $user = User::create([
@@ -43,6 +47,7 @@ class UserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => $request->role,
+            'department_id' => $request->role === RoleEnum::STAFF ? $request->department_id : null,
         ]);
 
         $user->syncRoles([$request->role]);
@@ -56,12 +61,14 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,'.$user->id,
             'role' => 'required|in:'.implode(',', RoleEnum::getValues()),
+            'department_id' => 'nullable|exists:departments,id',
         ]);
 
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
             'role' => $request->role,
+            'department_id' => $request->role === RoleEnum::STAFF ? $request->department_id : null,
         ]);
 
         $user->syncRoles([$request->role]);
