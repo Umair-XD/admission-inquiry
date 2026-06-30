@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{{ asset('dashboard/css/bootstrap.css') }}">
     <link rel="stylesheet" href="{{ asset('dashboard/fontawesome/css/all.css') }}">
     <link rel="stylesheet" href="{{ asset('dashboard/css/datatable.css') }}">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.bootstrap5.min.css">
+    <link rel="stylesheet" type="text/css" href="{{ asset('vendor/datatables/css/buttons.bootstrap5.min.css') }}">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -469,17 +469,17 @@
     <script src="fontawesome/js/all.min.js"></script>
     <script src="js/datatable.js"></script>
     <script src="js/datatable.bootstrap.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <script type="text/javascript" src="{{ asset('vendor/datatables/js/jquery.dataTables-1.11.5.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('vendor/datatables/js/dataTables.bootstrap5-1.11.5.min.js') }}"></script>
 
 <!-- DataTables Buttons JavaScript -->
-<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.bootstrap5.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.2.9/js/buttons.print.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.2.9/js/buttons.colVis.min.js"></script>
+<script type="text/javascript" src="{{ asset('vendor/datatables/js/dataTables.buttons-2.2.2.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('vendor/datatables/js/buttons.bootstrap5-2.2.2.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('vendor/datatables/js/buttons.html5-2.2.2.min.js') }}"></script>
+<script src="{{ asset('vendor/pdfmake/pdfmake.min.js') }}"></script>
+<script src="{{ asset('vendor/pdfmake/vfs_fonts.js') }}"></script>
+<script src="{{ asset('vendor/datatables/js/buttons.print-2.2.2.min.js') }}"></script>
+<script src="{{ asset('vendor/datatables/js/buttons.colVis-2.2.2.min.js') }}"></script>
 
     <script src="js/custom.js"></script>
 </body>

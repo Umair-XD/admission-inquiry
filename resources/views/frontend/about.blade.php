@@ -37,7 +37,7 @@
 <div class="card mb-4 shadow-sm border-0">
     <div class="row g-0">
         <div class="col-md-5">
-            <img src="{{ asset('images/Nfc-Iefr-1.jpg') }}"class="img-fluid rounded-start"alt="History">
+            <img src="{{ asset('frontend/images/Nfc-Iefr.jpg') }}" class="img-fluid rounded-start" alt="History">
 
         </div>
         <div class="col-md-7">
@@ -61,7 +61,7 @@
     <div class="row g-4">
         <div class="col-md-6">
             <div class="card h-100 shadow-sm border-0">
-                <img src="https://picsum.photos/600/300?random=1" class="card-img-top" alt="Programs">
+                <img src="{{ asset('images/remote/img-32.jpg') }}" class="card-img-top" alt="Programs">
                 <div class="card-body">
                     <h5 class="card-title text-primary">OUR PROGRAMS</h5>
                     <p class="card-text">NFC offers top-ranked engineering programs designed to build strong foundations
@@ -72,7 +72,7 @@
         </div>
         <div class="col-md-6">
             <div class="card h-100 shadow-sm border-0">
-                <img src="https://picsum.photos/600/300?random=2" class="card-img-top" alt="Campus Life">
+                <img src="{{ asset('images/remote/img-33.jpg') }}" class="card-img-top" alt="Campus Life">
                 <div class="card-body">
                     <h5 class="card-title text-primary">CAMPUS LIFE</h5>
                     <p class="card-text">A vibrant campus with academic excellence, co-curricular activities,
@@ -83,7 +83,7 @@
         </div>
         <div class="col-md-6">
             <div class="card h-100 shadow-sm border-0">
-                <img src="https://i.ytimg.com/vi/JKvsZbCizf0/maxresdefault.jpg" class="card-img-top" alt="Research">
+                <img src="{{ asset('images/remote/img-17.jpg') }}" class="card-img-top" alt="Research">
                 <div class="card-body">
                     <h5 class="card-title text-primary">RESEARCH & INNOVATION</h5>
                     <p class="card-text">NFC IEFR Faisalabad continues to achieve remarkable success through quality education, innovation, and student excellence.</p>
@@ -93,7 +93,7 @@
         </div>
         <div class="col-md-6">
             <div class="card h-100 shadow-sm border-0">
-                <img src="https://picsum.photos/600/300?random=4" class="card-img-top" alt="Admissions">
+                <img src="{{ asset('images/remote/img-34.jpg') }}" class="card-img-top" alt="Admissions">
                 <div class="card-body">
                     <h5 class="card-title text-primary">ADMISSIONS</h5>
                     <p class="card-text">Join NFC to begin your engineering future with strong academic programs,

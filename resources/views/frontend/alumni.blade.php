@@ -5,7 +5,7 @@
 
 <!-- Hero Section (Same as before) -->
 <section class="py-5 text-center text-white" 
-style="background: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), url('https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?q=80&w=1600') center/cover;">
+style="background: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), url('{{ asset('images/remote/img-27.jpg') }}') center/cover;">
   <div class="container">
     <h1 class="fw-bold">NFC (IEFR) Alumni Network</h1>
     <p class="lead mt-3">
@@ -35,7 +35,7 @@ style="background: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), url('htt
       </div>
 
       <div class="col-md-6">
-        <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1200"
+        <img src="{{ asset('images/remote/img-24.jpg') }}"
              class="img-fluid rounded shadow"
              alt="Alumni meeting">
       </div>
@@ -56,7 +56,7 @@ style="background: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), url('htt
 
       <div class="col-sm-6 col-lg-4">
         <div class="card h-100 shadow-sm text-dark">
-          <img src="https://images.unsplash.com/photo-1543269865-cbf427effbad?q=80&w=800"
+          <img src="{{ asset('images/remote/img-30.jpg') }}"
                class="card-img-top"
                alt="Entrepreneur">
           <div class="card-body">
@@ -70,7 +70,7 @@ style="background: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), url('htt
 
       <div class="col-sm-6 col-lg-4">
         <div class="card h-100 shadow-sm text-dark">
-          <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=800"
+          <img src="{{ asset('images/remote/img-26.jpg') }}"
                class="card-img-top"
                alt="Corporate leaders">
           <div class="card-body">
@@ -84,7 +84,7 @@ style="background: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), url('htt
 
       <div class="col-sm-6 col-lg-4">
         <div class="card h-100 shadow-sm text-dark">
-          <img src="https://images.unsplash.com/photo-1529070538774-1843cb3265df?q=80&w=800"
+          <img src="{{ asset('images/remote/img-29.jpg') }}"
                class="card-img-top"
                alt="Researchers">
           <div class="card-body">
@@ -109,22 +109,22 @@ style="background: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), url('htt
 
     <div class="row g-3">
       <div class="col-6 col-md-3">
-        <img src="https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?q=80&w=800"
+        <img src="{{ asset('images/remote/img-28.jpg') }}"
              class="img-fluid rounded shadow-sm"
              alt="Event 1">
       </div>
       <div class="col-6 col-md-3">
-        <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=800"
+        <img src="{{ asset('images/remote/img-25.jpg') }}"
              class="img-fluid rounded shadow-sm"
              alt="Event 2">
       </div>
       <div class="col-6 col-md-3">
-        <img src="https://images.unsplash.com/photo-1515169067865-5387ec356754?q=80&w=800"
+        <img src="{{ asset('images/remote/img-23.jpg') }}"
              class="img-fluid rounded shadow-sm"
              alt="Event 3">
       </div>
       <div class="col-6 col-md-3">
-        <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=800"
+        <img src="{{ asset('images/remote/img-26.jpg') }}"
              class="img-fluid rounded shadow-sm"
              alt="Event 4">
       </div>

@@ -6,7 +6,7 @@
     <title>Admin Login :: NFC Institute</title>
     <link rel="icon" type="image/png" href="{{ asset('logo.png') }}">
     <link rel="stylesheet" href="{{ asset('dashboard/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('vendor/fontawesome/css/all.min.css') }}">
     <style>
         body { background: #f0f2f5; }
         .card  { border: none; border-radius: 10px; box-shadow: 0 1px 4px rgba(0,0,0,.08); }

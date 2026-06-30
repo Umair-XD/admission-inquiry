@@ -9,7 +9,7 @@
 
     <!-- Image -->
     <div class="d-flex justify-content-center mb-4">
-        <img src="https://i.ytimg.com/vi/OhlWOOwUCUs/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLDDwS8X48Gws-93F_9lmdw-bHE1XQ"
+        <img src="{{ asset('images/remote/img-18.jpg') }}"
              class="img-fluid rounded animate-img shadow"
              style="max-width: 450px;">
     </div>
